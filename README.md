@@ -19,3 +19,7 @@ This sample demonstrates how to extend Azure IoT Hub Twins via Azure Blob Storag
 ### Quickstart
 - Retrieve the device connection string for your IoT Hub device; e.g., execute the following Azure CLI command `az iot hub device-identity show-connection-string --hub-name YourIoTHubName --device-id MyNodeDevice --output table`
 - See the README.md in each platform directory for further platform specific instructions
+
+## Resources 
+
+Please refer to the [Contributing](CONTRIBUTING.md) file for details on contributing changes.
