@@ -1,57 +1,25 @@
-# Project Name
+---
+services: iot-hub 
+platforms: nodejs,python,dotnet
+author: druttka
+---
 
-(short, 1-3 sentenced, description of the project)
+# How To Extend Azure IoT Hub Twins via Azure Blob Storage  
 
-## Features
-
-This project framework provides the following features:
-
-* Feature 1
-* Feature 2
-* ...
+This sample demonstrates how to extend Azure IoT Hub Twins via Azure Blob Storage. Concretely, a solution can benefit from this approach if the twin properties either [exceed the current limit](https://feedback.azure.com/forums/907045-azure-iot-edge/suggestions/33583492-iot-hub-device-and-module-twins-limit) or refer to binary content that cannot be easily represented in the twin's JSON payload.
 
 ## Getting Started
 
 ### Prerequisites
 
-(ideally very short, if any)
-
-- OS
-- Library version
-- ...
-
-### Installation
-
-(ideally very short)
-
-- npm install [package name]
-- mvn install
-- ...
+- An Azure IoT Hub device which receives twin updates from Azure IoT Hub. You can refer to the [Get started with device twins (Node)](https://docs.microsoft.com/en-us/azure/iot-hub/iot-hub-node-node-twin-getstarted) example to implement this.
+- An Azure Storage account with a blob container. You can refer to the [Quickstart](https://docs.microsoft.com/en-us/azure/storage/blobs/storage-quickstart-blobs-nodejs) to accomplish this.
+- See the README.md in each platform directory for any platform specific prerequisites.
 
 ### Quickstart
-(Add steps to get up and running quickly)
+- Retrieve the device connection string for your IoT Hub device; e.g., execute the following Azure CLI command `az iot hub device-identity show-connection-string --hub-name YourIoTHubName --device-id MyNodeDevice --output table`
+- See the README.md in each platform directory for further platform specific instructions
 
-1. git clone [repository clone url]
-2. cd [respository name]
-3. ...
+## Resources 
 
-
-## Demo
-
-A demo app is included to show how to use the project.
-
-To run the demo, follow these steps:
-
-(Add steps to start up the demo)
-
-1.
-2.
-3.
-
-## Resources
-
-(Any additional resources or related projects)
-
-- Link to supporting information
-- Link to similar sample
-- ...
+Please refer to the [Contributing](CONTRIBUTING.md) file for details on contributing changes.
