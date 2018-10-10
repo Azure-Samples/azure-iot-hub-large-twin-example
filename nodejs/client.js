@@ -10,6 +10,8 @@ const Protocol = require('azure-iot-device-mqtt').Mqtt;
 const request = require('request-promise-native');
 
 const connectionString = process.env.DEVICE_CONNECTION_STRING;
+const blobPropertyName = process.env.BLOB_PROPERTY_NAME || 'configurationBlob';
+
 const client = Client.fromConnectionString(connectionString, Protocol);
 
 let blobReference;
@@ -55,11 +57,13 @@ client.open(function (err) {
             }
 
             (async () => {
-                if (twin.properties.desired.configurationBlob) {
-                    await applyBlob(twin.properties.desired.configurationBlob);
+
+                let blobValue = twin.properties.desired[blobPropertyName]; 
+                if (blobValue) {
+                    await applyBlob(blobValue);
                 }
 
-                twin.on('properties.desired.configurationBlob', function(delta) {
+                twin.on(`properties.desired.${blobPropertyName}`, function(delta) {
                     applyBlob(delta);
                 });
             })();
