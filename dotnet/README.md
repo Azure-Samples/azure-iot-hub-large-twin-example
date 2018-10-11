@@ -26,6 +26,8 @@ To run samples in this repository, you need:
 
 ### Quickstart
 
-1. git clone [https://github/]
-2. 
+1. git clone [https://github.com/Azure-Samples/azure-iot-hub-large-twin-example.git]
+2. Retrieve the device connection string for your IoT Hub device and put connection string
+3. Prepare Azure Blob Storage with your data file and put Blob configuration
+4. Run the program and update the blob, and you will see updated properties in Twin
 
