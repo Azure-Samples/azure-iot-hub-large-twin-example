@@ -9,7 +9,10 @@
 *.userosscache
 *.sln.docstates
 .env
-
+*device-twin.json
+*device-twin-updated.json
+.DS_Store
+.vscode
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
 

@@ -230,35 +230,66 @@ docker run -e "CONNECTION_STRING=${SENSOR_CS}" -e "DEVICE_ID=${SENSOR_ID}" -t $U
 
 Now, switch back to your hub explorer to see the flowing data.
 
-### Update the Device Twin json
+### Update the Device Twin json 
 
-Upload the other payload to a blob:
+The steps to follow to accomplish this manually, would be the following:
 
-```bash
-az storage blob upload \
-    --container-name $AZURE_STORAGE_CONTAINER \
-    --account-name $AZURE_STORAGE_ACCOUNT \
-    --connection-string $AZURE_STORAGE_CONNECTION_STRING \
-    --name other-payload.txt \
-    --file sample-files/other-payload.txt
-```
+1. Upload the file to blob storage.
+2. Generate the SAS token to download the file from blob.
+3. Download the json file of the device Twin
+4. Replace the Blob URI on the file.
+5. Upload the updated json file to the device twin and profit.
 
-The new URL for the image would be:
+Or you can use our Azure CLI script to do it for you. Follow these steps:
 
-```bash
-echo "https://${AZURE_STORAGE_ACCOUNT}.blob.core.windows.net/${AZURE_STORAGE_CONTAINER}/payload.txt"
-```
+1. You would need a new console with all the right environment variables already in place and that your terminal is in the main directory of this project
 
-Obtain the latest version of the json file of the device twin:
+    ```bash
+    cd azure-iot-hub-large-twin-example #Make sure you are in the root folder of this project
+    ```
+  
+    Make sure to have all the following variables in your terminal, you can use a `.env` file to keep track of all of them and edit them with VS Code :
 
-```bash
-az iot hub device-twin show -n $IOT_HUB_NAME -g $RESOURCE_GROUP  -d $SENSOR_ID > $SENSOR_ID-device-twin.json
-```
+    ```bash
+    mv python/automate-setup/.env.sample python/automate-setup/.env #Copy the file
+    code python/automate-setup/.env
+    ```
 
-Update the json file with the new url for the other payload:
+    The file would look like this, make sure these are all up to date:
 
-```bash
-code $SENSOR_ID-device-twin.json
-```
+    ```bash
+    export RESOURCE_GROUP="dev-twins-rg"
+    export LOCATION="westus"
+    export IOT_HUB_NAME="devtwinsiot"
+    export DEVICE_PREFIX_NAME="twins"
+    export AZURE_STORAGE_ACCOUNT="azatwinsdemo01"
+    export AZURE_STORAGE_CONTAINER="devtwinscontainer"
+    export SENSOR_ID="supercooldevice0001"
+    ```
 
-Now, observe in the IoT hub Explorer what the new file looks like
+    After you have all the right variables. You need to source the file:
+
+    ```bash
+    source python/automate-setup/.env
+    ```
+
+1. Give execution permissions to the script:
+
+    ```bash
+    chmod +x python/automate-setup/new-blob.sh
+    ```
+
+1. Run the script, as many times as you want. It will always create a new file:
+
+    ```bash
+    ./python/automate-setup/new-blob.sh $RESOURCE_GROUP \
+    $AZURE_STORAGE_ACCOUNT \
+    $AZURE_STORAGE_CONTAINER \
+    $SENSOR_ID \
+    python/sample-files/iotLogo.txt
+    ```
+
+1. In the meantime, go back to the other terminal running the docker instance and you will see the magic happen. Re-run the command replacing the last line with other `sample-files`:
+    - `python/sample-files/iotLogo.txt`
+    - `python/sample-files/payload.txt`
+    - `python/sample-files/otherPayload.txt`
