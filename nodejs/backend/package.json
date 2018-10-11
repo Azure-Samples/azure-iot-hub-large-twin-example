@@ -1,0 +1,27 @@
+{
+  "name": "azure-iot-hub-large-twin-backend",
+  "version": "1.0.0",
+  "description": "Extending Azure IoT Hub twins via Azure Blob Storage",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:Azure-Samples/azure-iot-hub-large-twin-example.git"
+  },
+  "keywords": [
+    "azure",
+    "iot",
+    "twins",
+    "blob",
+    "storage"
+  ],
+  "author": "david.ruttka@microsoft.com",
+  "license": "MIT",
+  "dependencies": {
+    "azure-iothub": "^1.7.4",
+    "azure-storage": "^2.10.1",
+    "dotenv": "^6.1.0"
+  }
+}
