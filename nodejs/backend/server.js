@@ -64,7 +64,7 @@ const generateSasUrl = (blobService, containerName, blobName) => {
     
     try 
     {
-        const registry = Iothub.Registry.fromConnectionString(process.env.IOT_HUB_CONNECTION_STRING);
+        const jobClient = Iothub.JobClient.fromConnectionString(process.env.IOT_HUB_CONNECTION_STRING);
         const containerName = process.env.STORAGE_CONTAINER_NAME;
 
         const blobService = Storage.createBlobService(process.env.STORAGE_ACCOUNT_NAME, process.env.STORAGE_ACCOUNT_KEY);
@@ -74,32 +74,30 @@ const generateSasUrl = (blobService, containerName, blobName) => {
         await uploadBlobToContainer(blobService, containerName, 'blobname.json', 'large.json');
         const sasUrl = await generateSasUrl(blobService, containerName, 'blobname.json');
         
-        // TODO: accept query from args or env; tags or properties based to apply at scale
+        // TODO: accept query from args or env; use tags or properties to apply at scale
         const condition = "tags.platform='node'";
-        const query = registry.createQuery(`SELECT * FROM devices WHERE ${condition}`);
-        
-        // TODO: Consider submitting a job through the api rather than iterating over all the twins
-        // See: https://docs.microsoft.com/en-us/azure/iot-hub/iot-hub-devguide-jobs#jobs-to-update-device-twin-properties
 
-        query.nextAsTwin((err, twins) => {
-
-            for(const twin of twins) {
-                
-                twin.update({
-                    properties: {
-                        desired: {
-                            configurationBlob: {
-                                uri: sasUrl,
-                                ts: new Date().toISOString()
-                            }
-                        }
+        const patch = {
+            etag: '*',
+            properties: {
+                desired: {
+                    configurationBlob: {
+                        uri: sasUrl,
+                        ts: new Date().toISOString()
                     }
-                }, (err) => {
-                    if (err) {
-                        console.error(err);
-                    }
-                });
+                }
             }
+        };
+
+        jobClient.scheduleTwinUpdate(`configurationBlob-${new Date().getTime()}`, condition, patch, new Date(), 300, (err, result) => {
+            
+            if (err) {
+                console.error(err);
+                return;
+            }
+
+            console.log('Successfully submitted job to apply twin updates:');
+            console.dir(result);
 
         });
     }
