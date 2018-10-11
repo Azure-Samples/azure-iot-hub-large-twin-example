@@ -71,8 +71,8 @@ const generateSasUrl = (blobService, containerName, blobName) => {
         await ensureContainer(blobService, containerName);
     
         // TODO: accept blob and local file names from args or env
-        await uploadBlobToContainer(blobService, containerName, 'blobname.json', 'large.json');
-        const sasUrl = await generateSasUrl(blobService, containerName, 'blobname.json');
+        await uploadBlobToContainer(blobService, containerName, 'payload', '../../sample-files/payload.txt');
+        const sasUrl = await generateSasUrl(blobService, containerName, 'payload');
         
         // TODO: accept query from args or env; use tags or properties to apply at scale
         const condition = "tags.platform='node'";
