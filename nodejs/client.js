@@ -12,7 +12,7 @@ const request = require('request-promise-native');
 const PipelineFailure = Symbol('pipeline.failed');
 
 let blobTimestamp;
-let blobContents;
+let blobContent;
 
 const subscribeToBlobChanges = (client, propertyName, pipeline) => {
 
@@ -26,16 +26,22 @@ const subscribeToBlobChanges = (client, propertyName, pipeline) => {
     
             twin.on(`properties.desired.${propertyName}`, async (delta) => {
 
-                await pipeline.reduce(async (previousPromise, next) => {
+                const initialState = {
+                    delta: delta,
+                    status: 'pending'
+                };
+
+                const state = await pipeline.reduce(async (previousPromise, next) => {
                     
                     try {
-                        const previousOutput = await previousPromise;
 
-                        if (previousOutput === PipelineFailure) {
-                            return PipelineFailure;
+                        const state = await previousPromise;
+
+                        if (state.status === PipelineFailure) {
+                            return state;
                         }
 
-                        return await next(previousOutput);
+                        return await next(state);
                     }
                     catch (err) {
 
@@ -45,7 +51,7 @@ const subscribeToBlobChanges = (client, propertyName, pipeline) => {
                     
                     }
 
-                }, Promise.resolve(delta));
+                }, Promise.resolve(initialState));
 
             });
 
@@ -55,33 +61,35 @@ const subscribeToBlobChanges = (client, propertyName, pipeline) => {
     });
 };
 
-const downloadBlobContent = async (content) => {
+const downloadBlobContent = async (state) => {
 
-    if (blobTimestamp === content.ts) {
+    const delta = state.delta;
+
+    if (blobTimestamp === delta.ts) {
         console.warn('identical timestamp, nothing to change');
-        return blobContents;
     }
-
-    if (!content.uri) {
+    else if (!delta.uri) {
         console.warn('no uri, nothing to do');
-        return blobContents;
     }
-
-    blobContents = await request.get(content.uri);
-    blobTimestamp = content.ts;
-
-    return blobContents;
+    else {
+        blobContent = await request.get(delta.uri);
+        blobTimestamp = delta.ts;    
+    }
+    
+    state.content = blobContent;
+    return state;
 };
 
-const processBlobContent = (content) => {
+const parseAndLogJsonContent = (state) => {
 
     // Do whatever is necessary with the attached blob payload.
     // For the sake of this example, consider that it is a secondary JSON payload to be 
     // parsed, containing additional configuration data.
 
-    const parsed = JSON.parse(content);
+    const parsed = JSON.parse(state.content);
     console.log(`process content item count: ${parsed.items.length}`);
 
+    return state;
 }
 
 const initializeClient = (connectionString, protocol) => {
@@ -114,7 +122,7 @@ const initializeClient = (connectionString, protocol) => {
             process.env.BLOB_PROPERTY_NAME || 'configurationBlob', 
             [
                 downloadBlobContent, 
-                processBlobContent
+                parseAndLogJsonContent,
             ]);
 
     }
