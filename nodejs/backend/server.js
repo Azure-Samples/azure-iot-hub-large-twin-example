@@ -78,6 +78,9 @@ const generateSasUrl = (blobService, containerName, blobName) => {
         const condition = "tags.platform='node'";
         const query = registry.createQuery(`SELECT * FROM devices WHERE ${condition}`);
         
+        // TODO: Consider submitting a job through the api rather than iterating over all the twins
+        // See: https://docs.microsoft.com/en-us/azure/iot-hub/iot-hub-devguide-jobs#jobs-to-update-device-twin-properties
+        
         query.nextAsTwin((err, twins) => {
 
             for(const twin of twins) {
