@@ -1,5 +1,5 @@
 {
-  "name": "twin-extensions-node",
+  "name": "azure-iot-hub-large-twin-client",
   "version": "1.0.0",
   "description": "Extending Azure IoT Hub twins via Azure Blob Storage",
   "main": "client.js",
