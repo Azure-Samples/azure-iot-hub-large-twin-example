@@ -100,15 +100,12 @@ const downloadBlobContent = async (update) => {
     return update;
 };
 
-const parseAndLogJsonContent = (update) => {
+const renderConfiguration = (update) => {
 
     // Do whatever is necessary with the attached blob payload.
-    // For the sake of this example, consider that it is a secondary JSON payload to be 
-    // parsed, containing additional configuration data.
+    // For the sake of this example, consider that it is text data to log to the console.
 
-    const parsed = JSON.parse(update.content);
-    console.log(`process content item count: ${parsed.items.length}`);
-
+    console.log(update.content);
     update.status = 'success';
     return update;
 }
@@ -142,7 +139,7 @@ const initializeClient = (connectionString, protocol) => {
             process.env.BLOB_PROPERTY_NAME || 'configurationBlob', 
             [
                 downloadBlobContent, 
-                parseAndLogJsonContent,
+                renderConfiguration,
             ]);
 
     }
