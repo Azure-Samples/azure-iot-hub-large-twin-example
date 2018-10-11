@@ -108,6 +108,7 @@ const initializeClient = (connectionString, protocol) => {
     {
         let client = await initializeClient(process.env.DEVICE_CONNECTION_STRING, Mqtt);
 
+        // TODO: The example does not currently send back a patch of reported properties
         await subscribeToBlobChanges(
             client, 
             process.env.BLOB_PROPERTY_NAME || 'configurationBlob', 
