@@ -9,10 +9,7 @@ const Client = require('azure-iot-device').Client;
 const Mqtt = require('azure-iot-device-mqtt').Mqtt;
 const request = require('request-promise-native');
 
-const PipelineFailure = Symbol('pipeline.failed');
-
-let blobTimestamp;
-let blobContent;
+let blobState = {};
 
 const subscribeToBlobChanges = (client, propertyName, pipeline) => {
 
@@ -26,33 +23,52 @@ const subscribeToBlobChanges = (client, propertyName, pipeline) => {
     
             twin.on(`properties.desired.${propertyName}`, async (delta) => {
 
-                const initialState = {
+                const updatedState = {
                     delta: delta,
-                    status: 'pending'
+                    status: 'pending',
+                    acknowledgedUri: delta.uri
                 };
 
-                const state = await pipeline.reduce(async (previousPromise, next) => {
+                blobState = await pipeline.reduce(async (previousPromise, next) => {
                     
+                    let state;
+
                     try {
 
-                        const state = await previousPromise;
-
-                        if (state.status === PipelineFailure) {
-                            return state;
-                        }
-
+                        state = await previousPromise;
                         return await next(state);
+
                     }
                     catch (err) {
 
                         console.error(`Failed to execute the pipeline for the updated ${propertyName} value:`);
                         console.error(err);
-                        return PipelineFailure;
-                    
+                        
+                        state.status = err.message || 'failed';
+
+                        return state;
                     }
 
-                }, Promise.resolve(initialState));
+                }, Promise.resolve(updatedState));
 
+                const patch = {};
+                patch[propertyName] = {
+                    uri: blobState.uri,
+                    acknowledgedUri: blobState.acknowledgedUri,
+                    status: blobState.status
+                };
+
+                twin.properties.reported.update(patch, (err) => {
+
+                    console.log('Attempted to report:');
+                    console.dir(patch);
+
+                    if (err) {
+                        console.error(`Failed to update the reported properties for ${propertyName}:`);
+                        console.error(err);
+                    }
+
+                })
             });
 
             return resolve(twin);
@@ -61,35 +77,40 @@ const subscribeToBlobChanges = (client, propertyName, pipeline) => {
     });
 };
 
-const downloadBlobContent = async (state) => {
+const downloadBlobContent = async (update) => {
 
-    const delta = state.delta;
+    const delta = update.delta;
 
-    if (blobTimestamp === delta.ts) {
-        console.warn('identical timestamp, nothing to change');
+    const hasUriChanged = blobState.acknowledgedUri !== delta.uri;
+    const hasTimestampChanged = blobState.ts >= delta.ts;
+
+    if (!hasUriChanged && !hasTimestampChanged) {  
+        // Preserve the pre-existing state
+        update.status = blobState.status;
+        update.uri = blobState.uri;
+        update.ts = blobState.ts;
+        update.content = blobState.content;
+    } else {
+        update.status = 'pending';
+        update.uri = delta.uri;
+        update.ts = delta.ts;    
+        update.content = await request.get(delta.uri);    
     }
-    else if (!delta.uri) {
-        console.warn('no uri, nothing to do');
-    }
-    else {
-        blobContent = await request.get(delta.uri);
-        blobTimestamp = delta.ts;    
-    }
-    
-    state.content = blobContent;
-    return state;
+
+    return update;
 };
 
-const parseAndLogJsonContent = (state) => {
+const parseAndLogJsonContent = (update) => {
 
     // Do whatever is necessary with the attached blob payload.
     // For the sake of this example, consider that it is a secondary JSON payload to be 
     // parsed, containing additional configuration data.
 
-    const parsed = JSON.parse(state.content);
+    const parsed = JSON.parse(update.content);
     console.log(`process content item count: ${parsed.items.length}`);
 
-    return state;
+    update.status = 'success';
+    return update;
 }
 
 const initializeClient = (connectionString, protocol) => {
