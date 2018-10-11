@@ -80,7 +80,7 @@ const generateSasUrl = (blobService, containerName, blobName) => {
         
         // TODO: Consider submitting a job through the api rather than iterating over all the twins
         // See: https://docs.microsoft.com/en-us/azure/iot-hub/iot-hub-devguide-jobs#jobs-to-update-device-twin-properties
-        
+
         query.nextAsTwin((err, twins) => {
 
             for(const twin of twins) {
@@ -104,7 +104,7 @@ const generateSasUrl = (blobService, containerName, blobName) => {
         });
     }
     catch (err) {
-        console.error('device startup failed:');
+        console.error('Failed to update twins with the desired blob:');
         console.error(err);
     }
 
