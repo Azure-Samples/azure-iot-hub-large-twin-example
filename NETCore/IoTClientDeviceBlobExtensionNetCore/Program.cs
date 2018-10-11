@@ -9,7 +9,7 @@ namespace IoTClientDeviceBlobExtensionNetCore
 {
     class Program
     {
-        static string DeviceConnectionString = "PUT CONNECTION STRING HERE";
+        static string DeviceConnectionString = "Put Device Connection string here";
         static DeviceClient Client = null;
 
         static BlobExtension blobClient = null;

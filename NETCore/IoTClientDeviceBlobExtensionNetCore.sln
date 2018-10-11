@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.28010.2026
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IoTClientDeviceBlobExtensionNetCore", "IoTClientDeviceBlobExtensionNetCore\IoTClientDeviceBlobExtensionNetCore.csproj", "{50DAA553-743F-434A-90B8-4455A6B5D254}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IoTClientDeviceBlobExtensionNetCore", "IoTClientDeviceBlobExtensionNetCore\IoTClientDeviceBlobExtensionNetCore.csproj", "{50DAA553-743F-434A-90B8-4455A6B5D254}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IoTHubExtension", "IoTHubExtension\IoTHubExtension.csproj", "{D1957E2A-ABA1-4F97-B4A6-C7C6275F614B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{50DAA553-743F-434A-90B8-4455A6B5D254}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{50DAA553-743F-434A-90B8-4455A6B5D254}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{50DAA553-743F-434A-90B8-4455A6B5D254}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D1957E2A-ABA1-4F97-B4A6-C7C6275F614B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D1957E2A-ABA1-4F97-B4A6-C7C6275F614B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D1957E2A-ABA1-4F97-B4A6-C7C6275F614B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D1957E2A-ABA1-4F97-B4A6-C7C6275F614B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
