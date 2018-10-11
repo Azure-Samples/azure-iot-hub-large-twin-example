@@ -26,6 +26,6 @@ To run samples in this repository, you need:
 
 ### Quickstart
 
-1. git clone [https://github/]
+1. git clone [https://github.com/Azure-Samples/azure-iot-hub-large-twin-example.git]
 2. 
 
