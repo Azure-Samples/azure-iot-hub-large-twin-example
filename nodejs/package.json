@@ -1,0 +1,28 @@
+{
+  "name": "twin-extensions-node",
+  "version": "1.0.0",
+  "description": "Extending Azure IoT Hub twins via Azure Blob Storage",
+  "main": "client.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:Azure-Samples/azure-iot-hub-large-twin-example.git"
+  },
+  "keywords": [
+    "azure",
+    "iot",
+    "twins",
+    "blob",
+    "storage"
+  ],
+  "author": "david.ruttka@microsoft.com",
+  "license": "MIT",
+  "dependencies": {
+    "azure-iot-device": "^1.7.4",
+    "azure-iot-device-mqtt": "^1.7.4",
+    "request": "^2.88.0",
+    "request-promise-native": "^1.0.5"
+  }
+}
