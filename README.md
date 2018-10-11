@@ -61,10 +61,10 @@ We will report an acknowledgment of the new blob asset in a rich object. The pro
 }
 ```
 
-Through this structure, a device or module can 
-- Report which asset it is currently using
-- Report which asset it has acknowledge, even if it has not been able to retrieve or apply it
-- Report the status of applying the latest blob asset
+Through this structure, a device or module can report
+- which asset it is currently using
+- which asset it has acknowledged, even if it has not been able to retrieve or apply it
+- the status of applying the latest blob asset
 
 ### Device Client
 
