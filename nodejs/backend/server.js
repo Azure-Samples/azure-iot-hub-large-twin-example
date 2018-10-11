@@ -42,6 +42,8 @@ const generateSasUrl = (blobService, containerName, blobName) => {
 
     var startDate = new Date();
     var expiryDate = new Date(startDate);
+
+    // TODO: Accept the expiry and start ranges as parameters
     expiryDate.setMinutes(startDate.getMinutes() + 100);
     startDate.setMinutes(startDate.getMinutes() - 100);
 
@@ -72,8 +74,31 @@ const generateSasUrl = (blobService, containerName, blobName) => {
         await uploadBlobToContainer(blobService, containerName, 'blobname.json', 'large.json');
         const sasUrl = await generateSasUrl(blobService, containerName, 'blobname.json');
         
-        // TODO: Query and update the twins
-        console.log(sasUrl);
+        // TODO: accept query from args or env; tags or properties based to apply at scale
+        const condition = "tags.platform='node'";
+        const query = registry.createQuery(`SELECT * FROM devices WHERE ${condition}`);
+        
+        query.nextAsTwin((err, twins) => {
+
+            for(const twin of twins) {
+                
+                twin.update({
+                    properties: {
+                        desired: {
+                            configurationBlob: {
+                                uri: sasUrl,
+                                ts: new Date().toISOString()
+                            }
+                        }
+                    }
+                }, (err) => {
+                    if (err) {
+                        console.error(err);
+                    }
+                });
+            }
+
+        });
     }
     catch (err) {
         console.error('device startup failed:');
