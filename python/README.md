@@ -286,10 +286,10 @@ Or you can use our Azure CLI script to do it for you. Follow these steps:
     $AZURE_STORAGE_ACCOUNT \
     $AZURE_STORAGE_CONTAINER \
     $SENSOR_ID \
-    python/sample-files/iotLogo.txt
+    ./sample-files/iotLogo.txt
     ```
 
 1. In the meantime, go back to the other terminal running the docker instance and you will see the magic happen. Re-run the command replacing the last line with other `sample-files`:
-    - `python/sample-files/iotLogo.txt`
-    - `python/sample-files/payload.txt`
-    - `python/sample-files/otherPayload.txt`
+    - `./sample-files/iotLogo.txt`
+    - `./sample-files/payload.txt`
+    - `./sample-files/otherPayload.txt`
