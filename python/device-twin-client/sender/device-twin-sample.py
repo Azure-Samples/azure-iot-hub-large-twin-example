@@ -15,12 +15,10 @@ DEVICE_ID = os.environ['DEVICE_ID']
 # choose HTTP, AMQP or MQTT as transport protocol
 PROTOCOL = IoTHubTransportProvider.MQTT
 MESSAGE_TIMEOUT = 10000
-AVG_WIND_SPEED = 6.0
 SEND_CALLBACKS = 0
-MSG_TXT = "{\"deviceId\": \"" + DEVICE_ID + "\",\"p-value\": %.2f}"
+MSG_TXT = "{\"deviceId\": \"" + DEVICE_ID + "}"
 
 # Device Twin configuration:
-
 TIMER_COUNT = 5
 TWIN_CONTEXT = 0
 SEND_REPORTED_STATE_CONTEXT = 0
@@ -29,14 +27,20 @@ def device_twin_callback(update_state, payload, user_context):
     print ( "Twin callback called with:" )
     print ( "    updateStatus: %s" % update_state )
     print ( "    payload: %s" % payload )
-    print ( "Downloading new file ...")
-    parsed_json = json.loads(payload)
-    url = parsed_json["desired"]["configurationBlob"]["uri"]
-    print ( "    url of the blob: %s" % url )
-    response = urllib.request.urlopen(url)
-    data = response.read()
-    text = data.decode('utf-8')
-    print(text)
+    print (update_state)
+    if (("%s"%(update_state)) == "PARTIAL"):
+        print ("Change triggered on device twin")
+        print ( "Downloading new file ...")
+        parsed_json = json.loads(payload)
+        url = parsed_json["configurationBlob"]["uri"]
+        print ( "    url of the blob: %s" % url )
+        response = urllib.request.urlopen(url)
+        data = response.read()
+        text = data.decode('utf-8')
+        print(text)
+    if (update_state == "COMPLETE"):
+        print ( "Device Twin has no changes")
+
 
 
 def send_reported_state_callback(status_code, user_context):
@@ -83,7 +87,7 @@ def iothub_client_telemetry_sample_run():
         message_counter = 0
 
         while True:
-            msg_txt_formatted = MSG_TXT % (AVG_WIND_SPEED + (random.random() * 3 + 2))
+            msg_txt_formatted = MSG_TXT 
             # messages can be encoded as string or bytearray
             if (message_counter & 1) == 1:
                 message = IoTHubMessage(bytearray(msg_txt_formatted, 'utf8'))
