@@ -6,7 +6,9 @@ author: Kohei Kawata
 
 # Azure IoT Hub Large Twin Example for .NET
 
-This sample demonstrates how to extend Azure IoT Hub Twins via Azure Blob Storage. Concretely, a solution can benefit from this approach if the twin properties either exceed the current limit or refer to binary content that cannot be easily represented in the twin's JSON payload.
+This sample demonstrates how to extend Azure IoT Hub Twins via Azure Blob Storage. Concretely, a solution can benefit from this approach if the twin properties either exceed the current limit or refer to binary content that cannot be easily represented in the twin's JSON payload. Here is the diagram for that sample:
+![Sample diagram](IotHub extending twin.png)
+
 
 ## Features
 This project framework provides the following features:
