@@ -12,7 +12,7 @@ This sample demonstrates how to extend Azure IoT Hub Twins via Azure Blob Storag
 
 ## Problem Statement
 
-Azure IoT Hub device twins and Azure IoT Edge module twins are limited in both size and content type. The twins are JSON payloads limited to 8kb. Members of the Azure IoT development community may wish to include twin data that exceeds the size limit. They may also wish to "attach" binary assets.
+Azure IoT Hub device twins and Azure IoT Edge module twins are limited in both size and content type. The twins are JSON payloads limited to 8kb. Members of the Azure IoT development community may wish to include twin data that exceeds the size limit. They may also wish to consume binary assets that are not easily represented in the JSON document.
 
 ## High Level Solution Overview
 
