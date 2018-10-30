@@ -6,146 +6,68 @@
 // external assets from blob storage, while the twin supplies the link to the blob
 
 const Client = require('azure-iot-device').Client;
-const Mqtt = require('azure-iot-device-mqtt').Mqtt;
+const Protocol = require('azure-iot-device-mqtt').Mqtt;
 const request = require('request-promise-native');
 
-let blobState = {};
+const connectionString = process.env.DEVICE_CONNECTION_STRING;
+const blobPropertyName = process.env.BLOB_PROPERTY_NAME || 'configurationBlob';
 
-const subscribeToBlobChanges = (client, propertyName, pipeline) => {
+const client = Client.fromConnectionString(connectionString, Protocol);
 
-    return new Promise((resolve, reject) => {
+let blobReference;
+let blobContents;
 
-        client.getTwin((err, twin) => {
-            
-            if (err) {
-                return reject(err);
-            }
+const applyBlob = async function(updatedBlob) {
     
-            twin.on(`properties.desired.${propertyName}`, async (delta) => {
-
-                const updatedState = {
-                    delta: delta,
-                    status: 'pending',
-                    acknowledgedUri: delta.uri
-                };
-
-                blobState = await pipeline.reduce(async (previousPromise, next) => {
-                    
-                    let state;
-
-                    try {
-
-                        state = await previousPromise;
-                        return await next(state);
-
-                    }
-                    catch (err) {
-
-                        console.error(`Failed to execute the pipeline for the updated ${propertyName} value:`);
-                        console.error(err);
-                        
-                        state.status = err.message || 'failed';
-
-                        return state;
-                    }
-
-                }, Promise.resolve(updatedState));
-
-                const patch = {};
-                patch[propertyName] = {
-                    uri: blobState.uri,
-                    acknowledgedUri: blobState.acknowledgedUri,
-                    status: blobState.status
-                };
-
-                twin.properties.reported.update(patch, (err) => {
-
-                    console.log('Attempted to report:');
-                    console.dir(patch);
-
-                    if (err) {
-                        console.error(`Failed to update the reported properties for ${propertyName}:`);
-                        console.error(err);
-                    }
-
-                })
-            });
-
-            return resolve(twin);
-        });
-
-    });
-};
-
-const downloadBlobContent = async (update) => {
-
-    const delta = update.delta;
-
-    const hasUriChanged = blobState.acknowledgedUri !== delta.uri;
-    const hasTimestampChanged = blobState.ts >= delta.ts;
-
-    if (!hasUriChanged && !hasTimestampChanged) {  
-        // Preserve the pre-existing state
-        update.status = blobState.status;
-        update.uri = blobState.uri;
-        update.ts = blobState.ts;
-        update.content = blobState.content;
-    } else {
-        update.status = 'pending';
-        update.uri = delta.uri;
-        update.ts = delta.ts;    
-        update.content = await request.get(delta.uri);    
+    if (blobReference === updatedBlob.ts) {
+        // Nothing to change
+        console.log('identical ts, nothing to change');
+        return;
     }
 
-    return update;
-};
+    if (!updatedBlob.uri) {
+        // TODO: report failure
+        console.log('no uri, nothing to do');
+        return;
+    }
 
-const renderConfiguration = (update) => {
+    const response = await request.get(updatedBlob.uri);
 
-    // Do whatever is necessary with the attached blob payload.
-    // For the sake of this example, consider that it is text data to log to the console.
+    blobContents = JSON.parse(response);
+    console.log(`${blobContents.items.length} items`);
 
-    console.log(update.content);
-    update.status = 'success';
-    return update;
+    blobReference = updatedBlob.ts;
+    console.log(`${blobReference} blob timestamps`);
 }
 
-const initializeClient = (connectionString, protocol) => {
-    
-    return new Promise((resolve, reject) => {
-    
-        const client = Client.fromConnectionString(connectionString, protocol);
+client.open(function (err) {
 
-        client.open((err) => {
+    if (err) {
+        
+        console.error('could not open IotHub client');
 
-            if (err) {
-                return reject('could not open IotHub client');
-            }
+    } else {
+        
+        console.log('client opened');
+
+        client.getTwin(function (err, twin) {
             
-            return resolve(client);
+            if (err) {
+                console.log(err);
+            }
+
+            (async () => {
+
+                let blobValue = twin.properties.desired[blobPropertyName]; 
+                if (blobValue) {
+                    await applyBlob(blobValue);
+                }
+
+                twin.on(`properties.desired.${blobPropertyName}`, function(delta) {
+                    applyBlob(delta);
+                });
+            })();
         });
 
-    });
-};
-
-(async () => {
-    
-    try 
-    {
-        let client = await initializeClient(process.env.DEVICE_CONNECTION_STRING, Mqtt);
-
-        await subscribeToBlobChanges(
-            client, 
-            process.env.BLOB_PROPERTY_NAME || 'configurationBlob', 
-            [
-                downloadBlobContent, 
-                renderConfiguration,
-            ]);
-
     }
-    catch (err) {
-        console.error('device startup failed:');
-        console.error(err);
-    }
-
-})();
+});
