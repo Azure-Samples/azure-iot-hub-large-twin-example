@@ -18,7 +18,7 @@ Azure IoT Hub device twins and Azure IoT Edge module twins are limited in both s
 
 Conceptually, one can workaround the twin size limitation by placing the larger asset in an external store, and then delivering a reference to that store via the twin properties. Devices can still observe twin property changes, but they must retrieve the linked asset to fully process the update. 
 
-> TODO: A diagram would be nice
+![High level diagram](./images/HighLevelDiagram.png)
 
 ### Twin Contract 
 
