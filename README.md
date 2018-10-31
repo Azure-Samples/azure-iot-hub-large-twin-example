@@ -72,9 +72,15 @@ When the values in the twin are changed, the device client will respond to the n
 
 ### Back-end
 
-Consider a use case where a large configuration object is required for a class of devices. Updating all of the twins could be a tedious and error-prone process. The example workaround includes a pattern for updating the twins at scale. 
+Consider a use case where a common large asset is meant to be applied to a class of devices. Updating all of the twins could be a tedious and error-prone process. The example workaround includes patterns for updating the twins at scale. 
 
 After creating or updating the blob, an automated process can submit a job through Azure IoT Hub or directly execute a device query to programatically update the twins for the targetted devices. See platform specific examples in the [dotnet](./dotnet/), [python](./python/), and [nodejs](./nodejs/) folders for more detail.
+
+Note that the different platforms in this example repo accomplish the twin updates in different ways, in order to demonstrate the alternatives. 
+
+- The [`nodejs/backend`](./nodejs/backend) folder includes a node script which uploads the blob, generates the SAS URL, and submits a job to IoT Hub to patch the twins for all devices that match a given condition. It utilizes the Node SDKs for IoT Hub and Azure Storage.
+- The [`python/automate-setup`](./python/automate-setup) folder includes a bash script which uploads the blob, generates the SAS URL, and directly submits a twin update for a single device identity. It utilizes the Azure CLI.
+- The [`dotnet/IoTHubExtension`](./dotnet/IoTHubExtension) folder includes C# code meant to be hosted as an Azure Function. This function is triggered from a blob update. When a blob is updated, a device query is performed against the IoT Hub device registry. For each matching device, a twin update is applied.
 
 ## Getting Started
 
