@@ -78,7 +78,7 @@ Note that the different platforms in this example repo accomplish the twin updat
 
 - The [`nodejs/backend`](./nodejs/backend) folder includes a node script which uploads the blob, generates the SAS URL, and submits a job to IoT Hub to patch the twins for all devices that match a given condition. It utilizes the Node SDKs for IoT Hub and Azure Storage.
 - The [`python/automate-setup`](./python/automate-setup) folder includes a bash script which uploads the blob, generates the SAS URL, and directly submits a twin update for a single device identity. It utilizes the Azure CLI.
-- The [`dotnet/IoTHubExtension`](./dotnet/IoTHubExtension) folder includes C# code meant to be hosted as an Azure Function. This function is triggered from a blob update. When a blob is updated, a device query is performed against the IoT Hub device registry. For each matching device, a twin update is applied.
+- The [`dotnet/IoTHubExtension`](./dotnet/IoTHubExtension) folder includes C# code meant to be hosted as an Azure Function. This function, when triggered from a blob update, performs a device query against the IoT Hub device registry. For each matching device, a twin update is applied to deliver the new SAS URL.
 
 ## Getting Started
 
