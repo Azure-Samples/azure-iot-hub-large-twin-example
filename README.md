@@ -4,11 +4,11 @@ platforms: nodejs,python,dotnet
 author: druttka
 ---
 
-> NOTE: The documentation and sample code in this repository is in active development.
-
 # How To Extend Azure IoT Hub Twins via Azure Blob Storage  
 
 This sample demonstrates how to extend Azure IoT Hub Twins via Azure Blob Storage. Concretely, a solution can benefit from this approach if the twin properties either [exceed the current limit](https://feedback.azure.com/forums/907045-azure-iot-edge/suggestions/33583492-iot-hub-device-and-module-twins-limit) or refer to binary content that cannot be easily represented in the twin's JSON payload.
+
+> NOTE: While the approach described in this repo has been used in several production scenarios, the sample code in this repo is for demonstration purposes and is not production ready. For example, the sample code does not currently include retry logic, robust error handling, tests, etc.
 
 ## Problem Statement
 
@@ -53,8 +53,8 @@ We will report an acknowledgment of the new blob asset in a rich object. The pro
 "properties": {
     "reported": {
         "configurationBlob": {
-            "acknowledged": "https://foo.azurestorage.net/bar?abc",
             "current": "https://foo.azurestorage.net/old?xyz,
+            "acknowledged": "https://foo.azurestorage.net/bar?abc",
             "status": "received | failed"
         }
     }
@@ -74,9 +74,7 @@ When the values in the twin are changed, the device client will respond to the n
 
 Consider a use case where a large configuration object is required for a class of devices. Updating all of the twins could be a tedious and error-prone process. The example workaround includes a pattern for updating the twins at scale. 
 
-After creating or updating the blob, an automated process (e.g., an Azure Function) can execute a device query and programatically update the twins for the targetted devices.
-
-> TODO: Include example code for back-end solution
+After creating or updating the blob, an automated process can submit a job through Azure IoT Hub or directly execute a device query to programatically update the twins for the targetted devices. See platform specific examples in the [dotnet](./dotnet/), [python](./python/), and [nodejs](./nodejs/) folders for more detail.
 
 ## Getting Started
 
