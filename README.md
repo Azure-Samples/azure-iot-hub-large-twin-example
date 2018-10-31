@@ -72,7 +72,7 @@ When the values in the twin are changed, the device client will respond to the n
 
 ### Back-end
 
-Consider a use case where a common large asset is meant to be applied to a class of devices. Updating all of the twins could be a tedious and error-prone process. The example workaround includes patterns for updating the twins at scale. 
+Consider a use case where a common large asset is meant to be applied to a class of devices. Updating all of the twins could be a tedious and error-prone process. The example workaround includes patterns for updating individual devices as well as for updating twins at scale. 
 
 After creating or updating the blob, an automated process can submit a job through Azure IoT Hub or directly execute a device query to programatically update the twins for the targetted devices. See platform specific examples in the [dotnet](./dotnet/), [python](./python/), and [nodejs](./nodejs/) folders for more detail.
 
