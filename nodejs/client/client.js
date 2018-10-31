@@ -14,30 +14,38 @@ const blobPropertyName = process.env.BLOB_PROPERTY_NAME || 'configurationBlob';
 
 const client = Client.fromConnectionString(connectionString, Protocol);
 
-let blobReference;
+let currentBlobUri;
+let currentBlobTs;
 let blobContents;
 
 const applyBlob = async function(updatedBlob) {
     
-    if (blobReference === updatedBlob.ts) {
-        // Nothing to change
-        console.log('identical ts, nothing to change');
+    const isUriEqual = (currentBlobUri === updatedBlob.uri);
+    const isTsEqual = (currentBlobTs === updatedBlob.ts);
+
+    if (isUriEqual && isTsEqual) {
+        console.log(`Already using the desired uri and timestamp for ${blobPropertyName}`);
         return;
     }
 
     if (!updatedBlob.uri) {
-        // TODO: report failure
-        console.log('no uri, nothing to do');
+        console.log(`Unable to apply empty uri for ${blobPropertyName}`);
         return;
     }
 
     const response = await request.get(updatedBlob.uri);
 
-    blobContents = JSON.parse(response);
+    // Process the blob depending on the content type and the more specific needs of 
+    // the solution. Here we are expecting it to be an additional JSON payload which 
+    // contains an "items" array, and we are simply logging the length of that array.
+    blobContents = JSON.parse(response);    
     console.log(`${blobContents.items.length} items`);
 
-    blobReference = updatedBlob.ts;
-    console.log(`${blobReference} blob timestamps`);
+    // Here we are tracking, in-memory, the uri and ts of the applied blob. 
+    currentBlobUri = updatedBlob.uri;
+    currentBlobTs = updatedBlob.ts;
+
+    // TODO: Report properties; see #18
 }
 
 client.open(function (err) {
