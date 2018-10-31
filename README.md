@@ -53,7 +53,7 @@ We will report an acknowledgment of the new blob asset in a rich object. The pro
 "properties": {
     "reported": {
         "configurationBlob": {
-            "current": "https://myaccount.blob.core.windows.net/container/blob.txt?sasquerystring,
+            "uri": "https://myaccount.blob.core.windows.net/container/blob.txt?sasquerystring,
             "ts": "2018-10-09T19:40:18.7138092Z"
         }
     }
