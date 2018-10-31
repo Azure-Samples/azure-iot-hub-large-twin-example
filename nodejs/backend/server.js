@@ -8,6 +8,11 @@ const Storage = require('azure-storage');
 
 require('dotenv').load();
 
+const blobName = process.argv[2];
+const localFilePath = process.argv[3];
+const sasStartOffsetMinutes = process.env.SAS_START_OFFSET_MINUTES || 5;
+const sasExpiryOffsetMinutes = process.env.SAS_EXPIRY_OFFSET_MINUTES || 15;
+
 const ensureContainer = (blobService, containerName) => {
 
     return new Promise((resolve, reject) => {
@@ -43,9 +48,8 @@ const generateSasUrl = (blobService, containerName, blobName) => {
     var startDate = new Date();
     var expiryDate = new Date(startDate);
 
-    // TODO: Accept the expiry and start ranges as parameters
-    expiryDate.setMinutes(startDate.getMinutes() + 100);
-    startDate.setMinutes(startDate.getMinutes() - 100);
+    expiryDate.setMinutes(startDate.getMinutes() + sasExpiryOffsetMinutes);
+    startDate.setMinutes(startDate.getMinutes() - sasStartOffsetMinutes);
 
     var sharedAccessPolicy = {
         AccessPolicy: {
@@ -70,12 +74,10 @@ const generateSasUrl = (blobService, containerName, blobName) => {
         const blobService = Storage.createBlobService(process.env.STORAGE_ACCOUNT_NAME, process.env.STORAGE_ACCOUNT_KEY);
         await ensureContainer(blobService, containerName);
     
-        // TODO: accept blob and local file names from args or env
-        await uploadBlobToContainer(blobService, containerName, 'payload', '../../sample-files/payload.txt');
-        const sasUrl = await generateSasUrl(blobService, containerName, 'payload');
+        await uploadBlobToContainer(blobService, containerName, blobName, localFilePath);
+        const sasUrl = await generateSasUrl(blobService, containerName, blobName);
         
-        // TODO: accept query from args or env; use tags or properties to apply at scale
-        const condition = "tags.platform='node'";
+        const condition = process.env.DEVICE_QUERY_CONDITION;
 
         const patch = {
             etag: '*',

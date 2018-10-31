@@ -36,10 +36,9 @@ const applyBlob = async function(updatedBlob) {
     const response = await request.get(updatedBlob.uri);
 
     // Process the blob depending on the content type and the more specific needs of 
-    // the solution. Here we are expecting it to be an additional JSON payload which 
-    // contains an "items" array, and we are simply logging the length of that array.
-    blobContents = JSON.parse(response);    
-    console.log(`${blobContents.items.length} items`);
+    // the solution. The end to end demo in this sample code's documentation is using
+    // text files with a variety of ASCII art, which we are printing to the console.
+    console.log(response);
 
     // Here we are tracking, in-memory, the uri and ts of the applied blob. 
     currentBlobUri = updatedBlob.uri;
