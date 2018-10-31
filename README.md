@@ -22,17 +22,17 @@ Conceptually, one can workaround the twin size limitation by placing the larger 
 
 ### Twin Contract 
 
-The JSON payload for the twin represents a contract. In this example, we are using the following properties in the twin.
+The structure of the twin's JSON payload represents a contract between the device client and the backend solution. In this example, we are defining the following properties in the twin.
 
 **desired**
 
-We will refer to a blob asset in a rich object. The property name `configurationBlob` is arbitrary, but note the structure of the object value.
+We will provide a reference to the blob asset through an object. The property name `configurationBlob` is arbitrary, but note the structure of the object value.
 
 ```
 "properties": {
     "desired": {
         "configurationBlob": {
-            "uri": "https://myaccount.blob.core.windows.net/sascontainer/sasblob.txt?sv=2015-04-05&st=2015-04-29T22%3A18%3A26Z&se=2015-04-30T02%3A23%3A26Z&sr=b&sp=rw&sip=168.1.5.60-168.1.5.70&spr=https&sig=Z%2FRHIX5Xcg0Mq2rqI3OlWTjEg2tYkboXr1P9ZUXDtkk%3D",
+            "uri": "https://myaccount.blob.core.windows.net/sascontainer/sasblob.txt?sasquerystring",
             "ts": "2018-10-09T19:40:18.7138092Z",
             "contentType": "json"
         }
@@ -53,8 +53,8 @@ We will report an acknowledgment of the new blob asset in a rich object. The pro
 "properties": {
     "reported": {
         "configurationBlob": {
-            "current": "https://foo.azurestorage.net/old?xyz,
-            "acknowledged": "https://foo.azurestorage.net/bar?abc",
+            "current": "https://myaccount.blob.core.windows.net/sascontainer/sasblob1.txt?sasquerystring,
+            "acknowledged": "https://myaccount.blob.core.windows.net/sascontainer/sasblob2.txt?sasquerystring",
             "status": "received | failed"
         }
     }
