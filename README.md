@@ -32,7 +32,7 @@ We will provide a reference to the blob asset through an object. The property na
 "properties": {
     "desired": {
         "configurationBlob": {
-            "uri": "https://myaccount.blob.core.windows.net/sascontainer/sasblob.txt?sasquerystring",
+            "uri": "https://myaccount.blob.core.windows.net/container/blob.txt?sasquerystring",
             "ts": "2018-10-09T19:40:18.7138092Z",
             "contentType": "json"
         }
@@ -53,18 +53,16 @@ We will report an acknowledgment of the new blob asset in a rich object. The pro
 "properties": {
     "reported": {
         "configurationBlob": {
-            "current": "https://myaccount.blob.core.windows.net/sascontainer/sasblob1.txt?sasquerystring,
-            "acknowledged": "https://myaccount.blob.core.windows.net/sascontainer/sasblob2.txt?sasquerystring",
-            "status": "received | failed"
+            "current": "https://myaccount.blob.core.windows.net/container/blob.txt?sasquerystring,
+            "ts": "2018-10-09T19:40:18.7138092Z"
         }
     }
 }
 ```
 
 Through this structure, a device or module can report
-- which asset it is currently using
-- which asset it has acknowledged, even if it has not been able to retrieve or apply it
-- the status of applying the latest blob asset
+- the location of the currently applied asset
+- the timestamp of the applied asset, as echoed from the received `desired` properties
 
 ### Device Client
 
