@@ -18,22 +18,22 @@ let currentBlobUri;
 let currentBlobTs;
 let blobContents;
 
-const applyBlob = async function(updatedBlob) {
+const applyBlob = async function(desired, twin) {
     
-    const isUriEqual = (currentBlobUri === updatedBlob.uri);
-    const isTsEqual = (currentBlobTs === updatedBlob.ts);
+    const isUriEqual = (currentBlobUri === desired.uri);
+    const isTsEqual = (currentBlobTs === desired.ts);
 
     if (isUriEqual && isTsEqual) {
         console.log(`Already using the desired uri and timestamp for ${blobPropertyName}`);
         return;
     }
 
-    if (!updatedBlob.uri) {
+    if (!desired.uri) {
         console.log(`Unable to apply empty uri for ${blobPropertyName}`);
         return;
     }
 
-    const response = await request.get(updatedBlob.uri);
+    const response = await request.get(desired.uri);
 
     // Process the blob depending on the content type and the more specific needs of 
     // the solution. The end to end demo in this sample code's documentation is using
@@ -41,10 +41,20 @@ const applyBlob = async function(updatedBlob) {
     console.log(response);
 
     // Here we are tracking, in-memory, the uri and ts of the applied blob. 
-    currentBlobUri = updatedBlob.uri;
-    currentBlobTs = updatedBlob.ts;
+    currentBlobUri = desired.uri;
+    currentBlobTs = desired.ts;
 
-    // TODO: Report properties; see #18
+    const reportedPatch = {};
+    reportedPatch[blobPropertyName] = {
+        uri: currentBlobUri,
+        ts: currentBlobTs
+    };
+
+    twin.properties.reported.update(reportedPatch, (err) => {
+        if (err) {
+            console.error(err);
+        }
+    })
 }
 
 client.open(function (err) {
@@ -65,13 +75,13 @@ client.open(function (err) {
 
             (async () => {
 
-                let blobValue = twin.properties.desired[blobPropertyName]; 
-                if (blobValue) {
-                    await applyBlob(blobValue);
+                let desired = twin.properties.desired[blobPropertyName]; 
+                if (desired) {
+                    await applyBlob(desired, twin);
                 }
 
-                twin.on(`properties.desired.${blobPropertyName}`, function(delta) {
-                    applyBlob(delta);
+                twin.on(`properties.desired.${blobPropertyName}`, (desired) => {
+                    applyBlob(desired, twin);
                 });
             })();
         });
