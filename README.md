@@ -86,8 +86,10 @@ Note that the different platforms in this example repo accomplish the twin updat
 
 ### Prerequisites
 
-- An Azure subscription. You can get a [free trial here](https://azure.microsoft.com/en-us/free/).
-- See the README.md in each platform directory for any platform specific prerequisites.
+- An Azure subscription. Get a [free trial here](https://azure.microsoft.com/en-us/free/)!
+- An Azure IoT Hub and at least one connected device (physical or simulated). Refer to any of the "Send telemetry" 5-Minute Quickstarts under the [IoT Hub Documentation] (https://docs.microsoft.com/en-us/azure/iot-hub/).
+- An Azure Storage account. Refer to any of the "Create storage account" 5-Minute Quickstarts under the [Azure Storage Documentation](https://docs.microsoft.com/en-us/azure/storage/).
+- A blob container within the Azure Storage account. Refer to the "Blob quickstarts" of the [Azure Storage Documentation](https://docs.microsoft.com/en-us/azure/storage/).
 
 ### Quickstart
 - See the README.md in each platform directory for further platform specific instructions
