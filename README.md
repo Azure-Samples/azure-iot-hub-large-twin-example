@@ -76,7 +76,7 @@ Consider a use case where a common large asset is meant to be applied to a class
 
 After creating or updating the blob, an automated process can submit a job through Azure IoT Hub or directly execute a device query to programatically update the twins for the targetted devices. See platform specific examples in the [dotnet](./dotnet/), [python](./python/), and [nodejs](./nodejs/) folders for more detail.
 
-Note that the different platforms in this example repo accomplish the twin updates in different ways, in order to demonstrate the alternatives. 
+Note that the different platforms in this example repo accomplish the twin updates in different ways. This is only to demonstrate the alternative patterns. Conceptually, any of the approaches could be utilized on any supported platform.
 
 - The [`nodejs/backend`](./nodejs/backend) folder includes a node script which uploads the blob, generates the SAS URL, and submits a job to IoT Hub to patch the twins for all devices that match a given condition. It utilizes the Node SDKs for IoT Hub and Azure Storage.
 - The [`python/automate-setup`](./python/automate-setup) folder includes a bash script which uploads the blob, generates the SAS URL, and directly submits a twin update for a single device identity. It utilizes the Azure CLI.
