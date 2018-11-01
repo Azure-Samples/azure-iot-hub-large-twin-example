@@ -52,7 +52,7 @@ In the `automate-setup` directory,
         $AZURE_STORAGE_ACCOUNT \
         $AZURE_STORAGE_CONTAINER \
         $SENSOR_ID \
-        ./sample-files/iotLogo.txt
+        ../sample-files/iotLogo.txt
     ```
 
 If you left the client running, you should see the new artwork displayed in the console.
