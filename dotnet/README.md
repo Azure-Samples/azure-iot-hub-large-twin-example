@@ -12,7 +12,7 @@ Please refer to the [root README](../README.md) for a high level introduction of
 
 ### Prerequisites
 
-The [COMMON_SETUP.md](../COMMON_SETUP.md) file contains more detailed references on how to provision the required resources (e.g., IoT Hub, Storage Account, blob container).
+The [COMMON_SETUP.md](../COMMON_SETUP.md) file contains more detailed references on how to provision the required resources (e.g., IoT Hub, device identity, Storage Account, blob container).
 
 This platform solution also requires
 - [.NET Core 2.1 SDK](https://www.microsoft.com/net/download)
