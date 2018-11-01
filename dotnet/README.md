@@ -38,9 +38,15 @@ At this point, your client device is connected to IoT Hub and is registered to r
 
 **Deploy and configure the back-end solution**
 
-The `IotHubExtension` project is meant to be hosted as an Azure Function.
+The `IoTHubExtension` project is meant to be hosted as an Azure Function. One of the easiest ways to deploy this would be:
 
-> TODO: Fill in the quickstart 
+- Open the `IoTHubExtension` project in [VS Code](https://code.visualstudio.com/download)
+- Install the [Azure Functions extension](https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-azurefunctions) for VS Code
+- Use the Azure Functions extension to create and deploy a function 
+
+![Azure Functions extension toolbar](../images/AzureFunctionsExtensionToolbar.png)
+
+> TODO: Add the more complete details about configuring the blob trigger, IoT Hub connection string, and device query condition 
 
 ## Details
 
@@ -62,4 +68,8 @@ The `BlobExtension` acts on the updated properties.
 
 ![Sample diagram](IotHubExtendingTwin.png)
 
-> TODO: Fill in the details of the Azure Function approach
+- The function is triggered by updates to blobs in the configured container (`BlobTrigger`)
+- A new SAS URL is generated for the blob (`GetSharedAccessSignature`)
+- A device query is performed against the IoT Hub device registry (`registryManager.CreateQuery`)
+- For each returned device twin (`query.GetNextAsTwinAsync`), the twin's desired properties are updated with the new SAS URL (`twin.Properties.Desired = ...`)
+- The patched twins are submitted back to the IoT Hub registry (`registryManager.UpdateTwins2Async`)
