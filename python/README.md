@@ -1,4 +1,4 @@
-# How To Extend Azure IoT Hub Twins via Azure Blob Storage (Node.js)
+# How To Extend Azure IoT Hub Twins via Azure Blob Storage (python)
 
 Please refer to the [root README](../README.md) for a high level introduction of this sample. This document covers the details of the specific `python` implementation.  
 
