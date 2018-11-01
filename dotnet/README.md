@@ -12,11 +12,7 @@ Please refer to the [root README](../README.md) for a high level introduction of
 
 ### Prerequisites
 
-The [Prerequisites section of the root README](../README.md#prerequisites) contains more detailed references on how to provision the required resources:
-- an Azure IoT Hub
-  - with a device identity
-- an Azure Storage account
-  - with a blob container
+The [COMMON_SETUP.md](../COMMON_SETUP.md) file contains more detailed references on how to provision the required resources (e.g., IoT Hub, Storage Account, blob container).
 
 This platform solution also requires
 - [.NET Core 2.1 SDK](https://www.microsoft.com/net/download)
@@ -47,6 +43,8 @@ The `IoTHubExtension` project is meant to be hosted as an Azure Function. One of
 ![Azure Functions extension toolbar](../images/AzureFunctionsExtensionToolbar.png)
 
 > TODO: Add the more complete details about configuring the blob trigger, IoT Hub connection string, and device query condition 
+
+If you left the client running, you should see the new artwork displayed in the console.
 
 ## Details
 

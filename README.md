@@ -15,12 +15,12 @@ This sample demonstrates how to extend Azure IoT Hub Twins via Azure Blob Storag
 ### Prerequisites
 
 - An Azure subscription. Get a [free trial here](https://azure.microsoft.com/en-us/free/)!
-- An Azure IoT Hub and at least one connected device (physical or simulated). Refer to any of the "Send telemetry" 5-Minute Quickstarts under the [IoT Hub Documentation] (https://docs.microsoft.com/en-us/azure/iot-hub/).
-- An Azure Storage account. Refer to any of the "Create storage account" 5-Minute Quickstarts under the [Azure Storage Documentation](https://docs.microsoft.com/en-us/azure/storage/).
-- A blob container within the Azure Storage account. Refer to the "Blob quickstarts" of the [Azure Storage Documentation](https://docs.microsoft.com/en-us/azure/storage/).
 
 ### Quickstart
-- After reading this README for a high level overview of the solution, see the README in each platform directory for further platform specific instructions.
+
+- Read this README for a high level overview of the solution
+- Ensure that the base infrastructure for the example has been provisioned, as described in [COMMON_SETUP.md](./COMMON_SETUP.md)
+- See the README in each platform directory for further platform specific instructions.
 
 ## Problem Statement
 
