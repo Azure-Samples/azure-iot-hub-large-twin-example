@@ -31,3 +31,31 @@ In the `backend` directory,
   - Note that the DEVICE_QUERY_CONDITION in the template is intentionally set to a query which returns no devices
   - Note that the IOT_HUB_CONNECTION_STRING is **not the device connection string**, but rather an iothubowner connection; see [Access Control and Permissions](https://docs.microsoft.com/en-us/azure/iot-hub/iot-hub-devguide-security#iot-hub-permissions) and [Understand Different Connection Strings in Azure IoT Hub](https://blogs.msdn.microsoft.com/iotdev/2017/05/09/understand-different-connection-strings-in-azure-iot-hub/).
 - Execute the backend script to upload and apply a new blob; e.g., `node server.js mynewblob ../../sample-files/payload.txt`
+
+## Details
+
+### Client 
+
+- Opens the device client connection (`client.open`)
+- Gets the device twin (`client.getTwin`)
+- Applies any existing configuration (`await applyBlob(...)`)
+- Registers a callback for updates to the desired properties (`twin.on(...)`)
+
+The `applyBlob` function acts on the updated properties.
+
+- If it's the same uri and timestamp that we're already using, return
+- If there's no uri to follow, return
+- Retrieve the contents via the SAS URL (`request.get`)
+- Print the contents to the console (`console.log`)
+  - This example uses ASCII art text files, but other solutions might parse JSON, parse CSV files, display an image...)
+- Track the current uri and timestamp in memory
+- Patch the reported properties of the twin with the uri and timestamp that the device is now using (`twin.properties.reported.update(...)`)
+
+### Back-end
+
+- Initializes an IoT Hub job client (`Iothub.JobClient.fromConnectionString`)
+- Initializes a blob storage service (`Storage.createBlobService`)
+- Ensures that the target blob container exists (`ensureContainer`)
+- Uploads the blob (`uploadBlobToContainer`)
+- Generates a SAS URL for the blob (`generateSasUrl`)
+- Submits a job to update device twins for a given device query condition (`jobClient.scheduleTwinUpdate`)

@@ -33,12 +33,12 @@ const applyBlob = async function(desired, twin) {
         return;
     }
 
-    const response = await request.get(desired.uri);
+    const blobContents = await request.get(desired.uri);
 
     // Process the blob depending on the content type and the more specific needs of 
     // the solution. The end to end demo in this sample code's documentation is using
     // text files with a variety of ASCII art, which we are printing to the console.
-    console.log(response);
+    console.log(blobContents);
 
     // Here we are tracking, in-memory, the uri and ts of the applied blob. 
     currentBlobUri = desired.uri;
