@@ -66,8 +66,14 @@ The `BlobExtension` acts on the updated properties.
 
 ![Sample diagram](IotHubExtendingTwin.png)
 
+This example uses an Azure Function triggered from blob updates. The function iterates over the results of a device query to patch each twin. 
+
 - The function is triggered by updates to blobs in the configured container (`BlobTrigger`)
 - A new SAS URL is generated for the blob (`GetSharedAccessSignature`)
 - A device query is performed against the IoT Hub device registry (`registryManager.CreateQuery`)
 - For each returned device twin (`query.GetNextAsTwinAsync`), the twin's desired properties are updated with the new SAS URL (`twin.Properties.Desired = ...`)
 - The patched twins are submitted back to the IoT Hub registry (`registryManager.UpdateTwins2Async`)
+
+As alternatives, consider
+- the `nodejs` example in this repo includes the upload of the blob and generation of the SAS URL. It also submits a job to IoT Hub, offloading the responsibility of applying the update to each matched twin
+- the `python` example in this repo uses the Azure CLI to replace the twin for a single device by id

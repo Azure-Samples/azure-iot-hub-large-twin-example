@@ -79,3 +79,7 @@ The `automate-setup/new-blob.sh` script automates the manual process of
   - Obtains the current twin (`az iot hub device-twin show`)
   - Updates the desired blob properties (`jq...`)
   - Replaces the twin (`az iot hub device-twin replace`)
+
+As alternatives, consider
+- the `nodejs` example in this repo includes the upload of the blob and generation of the SAS URL. It also submits a job to IoT Hub, offloading the responsibility of applying the update to each matched twin
+- the `dotnet` example in this repo uses an Azure Function triggered from blob updates; it iterates over the results of a device query to patch each twin

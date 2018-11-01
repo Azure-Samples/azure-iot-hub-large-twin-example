@@ -51,9 +51,16 @@ The `applyBlob` function acts on the updated properties.
 
 ### Back-end
 
+This example uploads a new blob, generates a new SAS url, and submits a job to IoT Hub. The job takes on the responsibility of applying the update to each matched twin.
+
 - Initializes an IoT Hub job client (`Iothub.JobClient.fromConnectionString`)
 - Initializes a blob storage service (`Storage.createBlobService`)
 - Ensures that the target blob container exists (`ensureContainer`)
 - Uploads the blob (`uploadBlobToContainer`)
 - Generates a SAS URL for the blob (`generateSasUrl`)
 - Submits a job to update device twins for a given device query condition (`jobClient.scheduleTwinUpdate`)
+
+As alternatives, consider
+
+- the `dotnet` example in this repo uses an Azure Function triggered from blob updates; it iterates over the results of a device query to patch each twin
+- the `python` example in this repo uses the Azure CLI to replace the twin for a single device by id
