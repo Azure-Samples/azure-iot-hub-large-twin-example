@@ -20,7 +20,7 @@ This sample demonstrates how to extend Azure IoT Hub Twins via Azure Blob Storag
 - A blob container within the Azure Storage account. Refer to the "Blob quickstarts" of the [Azure Storage Documentation](https://docs.microsoft.com/en-us/azure/storage/).
 
 ### Quickstart
-- See the README.md in each platform directory for further platform specific instructions
+- After reading this README for a high level overview of the solution, see the README in each platform directory for further platform specific instructions.
 
 ## Problem Statement
 
