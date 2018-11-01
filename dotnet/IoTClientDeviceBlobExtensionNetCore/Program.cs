@@ -19,7 +19,10 @@ namespace IoTClientDeviceBlobExtensionNetCore
         { 
             try
             {
-                InitClient();
+                InitClient()
+                    .ConfigureAwait(false)
+                    .GetAwaiter()
+                    .GetResult();
             }
             catch (Exception ex)
             {
@@ -48,6 +51,7 @@ namespace IoTClientDeviceBlobExtensionNetCore
                 
                 //Download first time the blob attachment on a first start
                 string bigBlobContent = await blobClient.DownloadBlobAsync(twin.Properties.Desired[blobConfigPropertyName]);
+                ProcessContent(bigBlobContent);
 
                 //Subscribe on event if blob will be changed
                 blobClient.BlobPropertyUpdatedEvent += BlobClient_BlobPropertyUpdatedEvent;               
@@ -65,11 +69,15 @@ namespace IoTClientDeviceBlobExtensionNetCore
 
         private static void BlobClient_BlobPropertyUpdatedEvent(BlobExtension.BlobPropertyUpdatedArgs e, object sender)
         {           
-            //Do your things here after extended blob was updated///
-            ////
-            //////
-            ////////
-            //////////          
+            ProcessContent(e.BlobContent);
+        }
+
+        private static void ProcessContent(string content)
+        {
+            if (!string.IsNullOrEmpty(content))
+            {
+                Console.WriteLine(content);
+            }
         }
         
     }
