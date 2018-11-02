@@ -28,6 +28,42 @@ export AZURE_STORAGE_ACCOUNT="mystorage"
 export AZURE_STORAGE_CONTAINER="blobs"
 ```
 
+### Login to Azure 
+
+Before using the Azure CLI, ensure that you are logged in
+
+```bash
+az login
+```
+
+Also ensure that you have selected the desired target subscription
+
+To list available subscriptions,
+
+```bash
+az account list -o table
+```
+
+To set the active subscription,
+
+```bash
+az account set -s {desired_subscription_id}
+```
+
+To confirm that the subscription has been set
+
+```bash
+az account show -o table
+```
+
+### Create the resource group
+
+If the target resource group was not previously created, create it now
+
+```bash
+az group create -n $RESOURCE_GROUP -l $LOCATION
+```
+
 ### Create an IoT Hub 
 
 You can use the [portal](https://docs.microsoft.com/en-us/azure/iot-hub/iot-hub-python-twin-getstarted#create-an-iot-hub) or run the following commands with your Azure CLI:
@@ -44,16 +80,16 @@ export IOT_CON_STRING=`az iot hub show-connection-string -n $IOT_HUB_NAME -g $RE
 
 ### Create a new device in IoT Hub
 
-Let's create a random sufix for our devices that will be used in the creation of all the devices:
+Let's create a random suffix for our devices that will be used in the creation of all the devices:
 
 ```bash
-export RAND_SUFIX=$(cat /dev/urandom | env LC_CTYPE=C tr -dc 'a-z0-9' | fold -w 4 | head -n 1)
+export RAND_SUFFIX=$(cat /dev/urandom | env LC_CTYPE=C tr -dc 'a-z0-9' | fold -w 4 | head -n 1)
 ```
 
 Create a random number as an identifier for our sensor:
 
 ```bash
-export SENSOR_ID="${DEVICE_PREFIX_NAME}-${RAND_SUFIX}"
+export SENSOR_ID="${DEVICE_PREFIX_NAME}-${RAND_SUFFIX}"
 ```
 
 Create a new entry in IoT Hub:
@@ -103,7 +139,7 @@ az storage blob upload \
     --account-name $AZURE_STORAGE_ACCOUNT \
     --connection-string $AZURE_STORAGE_CONNECTION_STRING \
     --name payload.txt \
-    --file sample-files/payload.txt
+    --file ./sample-files/payload.txt
 ```
 
 You can also use the [Azure Storage Explorer](https://azure.microsoft.com/en-us/features/storage-explorer/) and the Azure Storage Connection String, that you can obtain running the following command:

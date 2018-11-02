@@ -15,22 +15,22 @@ export FILE=$5
 # export FILE=""
 
 # Obtaining connection strings
-export RAND_SUFIX=$(cat /dev/urandom | env LC_CTYPE=C tr -dc 'a-z0-9' | fold -w 4 | head -n 1)
+export RAND_SUFFIX=$(cat /dev/urandom | env LC_CTYPE=C tr -dc 'a-z0-9' | fold -w 4 | head -n 1)
 export AZURE_STORAGE_CONNECTION_STRING=`az storage account show-connection-string -g $RESOURCE_GROUP -n $AZURE_STORAGE_ACCOUNT -o tsv`
 
 # Upload to blob
-echo "Uploading file '$FILE' as 'payload-$RAND_SUFIX.txt' to blob container '$AZURE_STORAGE_CONTAINER'"
+echo "Uploading file '$FILE' as 'payload-$RAND_SUFFIX.txt' to blob container '$AZURE_STORAGE_CONTAINER'"
 az storage blob upload \
     --container-name $AZURE_STORAGE_CONTAINER \
     --account-name $AZURE_STORAGE_ACCOUNT \
     --connection-string $AZURE_STORAGE_CONNECTION_STRING \
-    --name  payload-$RAND_SUFIX.txt \
+    --name  payload-$RAND_SUFFIX.txt \
     --file $FILE
 
 # Generate SAS token
 echo "Generating SAS token"
 export SAS_TOKEN=`az storage blob generate-sas \
-    --name payload-$RAND_SUFIX.txt \
+    --name payload-$RAND_SUFFIX.txt \
     --container-name $AZURE_STORAGE_CONTAINER \
     --account-name $AZURE_STORAGE_ACCOUNT \
     --connection-string $AZURE_STORAGE_CONNECTION_STRING \
@@ -38,7 +38,7 @@ export SAS_TOKEN=`az storage blob generate-sas \
     --expiry 2042-04-02 -o tsv`
 echo "Token generated:"
 echo $SAS_TOKEN
-export NEW_URL="https://${AZURE_STORAGE_ACCOUNT}.blob.core.windows.net/${AZURE_STORAGE_CONTAINER}/payload-$RAND_SUFIX.txt?$SAS_TOKEN"
+export NEW_URL="https://${AZURE_STORAGE_ACCOUNT}.blob.core.windows.net/${AZURE_STORAGE_CONTAINER}/payload-$RAND_SUFFIX.txt?$SAS_TOKEN"
 echo "The new blob is here:"
 echo $NEW_URL 
 # Get the device id twin
