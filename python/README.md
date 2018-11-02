@@ -13,7 +13,7 @@ The python example also requires
 - [Azure IoT CLI extension](https://github.com/Azure/azure-iot-cli-extension#step-1-install-the-extension)
 - *Either* of the following
   - [Docker](https://www.docker.com/get-started)
-  - [Python](https://www.python.org/downloads/) 2.7+ or 3.6+
+  - [Python 3.6+](https://www.python.org/downloads/)
 
 ### Quickstart
 
@@ -30,11 +30,16 @@ In the `device-twin-client` directory, you can choose to run the client example 
 *For the Docker experience*
 
 - Build the image and tag it: `docker build -t localhost:5000/device-twin-client .`
-- Run the container, being sure to replace the values for the CONNECTION_STRING and DEVICE_ID environment variables: `docker run -e "CONNECTION_STRING=${SENSOR_CS}" -e "DEVICE_ID=${SENSOR_ID}" -t localhost:5000/device-twin-client .`
+- Run the container, being sure to replace the values for the CONNECTION_STRING and DEVICE_ID environment variables: `docker run -e "CONNECTION_STRING={deviceConnectionString}" -e "DEVICE_ID={deviceId}" localhost:5000/device-twin-client`
 
 *To run the python client directly*
 
 - Install the Azure IoT Hub device client module: `pip install azure-iothub-device-client`
+- Export the CONNECTION_STRING and DEVICE_ID environment variables. When on Windows, use `SET` instead of `export`
+```bash
+export CONNECTION_STRING=HostName=yourhub.azure-devices.net;DeviceId=yourdevice;SharedAccessKey=redacted
+export DEVICE_ID=yourdevice
+```
 - Run the application: `python ./sender/device-twin-sample.py`
 
 At this point, your client device is connected to IoT Hub and is registered to receive updates for its associated [device twin](https://docs.microsoft.com/en-us/azure/iot-hub/iot-hub-devguide-device-twins).
