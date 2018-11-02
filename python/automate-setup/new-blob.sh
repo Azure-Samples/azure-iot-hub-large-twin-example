@@ -1,18 +1,11 @@
 #!/bin/bash
 set -e
-# Requires jquery
+
 export RESOURCE_GROUP=$1
 export AZURE_STORAGE_ACCOUNT=$2
 export AZURE_STORAGE_CONTAINER=$3
 export SENSOR_ID=$4
 export FILE=$5
-
-# export AZURE_STORAGE_CONTAINER="devtwinscontainer"
-# export AZURE_STORAGE_ACCOUNT="iotdevtwins01"
-# export AZURE_STORAGE_CONNECTION_STRING=""
-# export SENSOR_ID=""tem
-# export RESOURCE_GROUP=""
-# export FILE=""
 
 # Obtaining connection strings
 export RAND_SUFFIX=$(cat /dev/urandom | env LC_CTYPE=C tr -dc 'a-z0-9' | fold -w 4 | head -n 1)
@@ -41,17 +34,13 @@ echo $SAS_TOKEN
 export NEW_URL="https://${AZURE_STORAGE_ACCOUNT}.blob.core.windows.net/${AZURE_STORAGE_CONTAINER}/payload-$RAND_SUFFIX.txt?$SAS_TOKEN"
 echo "The new blob is here:"
 echo $NEW_URL 
-# Get the device id twin
-az iot hub device-twin show -n $IOT_HUB_NAME \
--g $RESOURCE_GROUP  \
--d $SENSOR_ID > $SENSOR_ID-device-twin.json
 
-# Replace the blob url
-jq '.properties.desired.configurationBlob.uri="'${NEW_URL}'"'  $SENSOR_ID-device-twin.json > $SENSOR_ID-device-twin-updated.json
+# Create the patch object
+TS=`date '+%Y-%m-%dT%H:%M:%S'`
+TWIN_PATCH='{"uri":"'${NEW_URL}'","ts":"'${TS}'","contentType":"text/plain"}'
+echo $TWIN_PATCH
 
-# Waiting 1 second to allow the SAS token to be propagated
-sleep 1
-# Replace the device id twin with the updated version
-az iot hub device-twin replace  -n $IOT_HUB_NAME \
+# Update the twin
+az iot hub device-twin update -n $IOT_HUB_NAME \
     -g $RESOURCE_GROUP -d $SENSOR_ID \
-    -j $SENSOR_ID-device-twin-updated.json
+    --set properties.desired.configurationBlob=$TWIN_PATCH

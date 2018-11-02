@@ -11,7 +11,6 @@ The [COMMON_SETUP.md](../COMMON_SETUP.md) file contains more detailed references
 The python example also requires
 - [Azure CLI](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli?view=azure-cli-latest) (>= 2.0.46)
 - [Azure IoT CLI extension](https://github.com/Azure/azure-iot-cli-extension#step-1-install-the-extension)
-- [jq](https://stedolan.github.io/jq/) `sudo apt-get install jq`
 - *Either* of the following
   - [Docker](https://www.docker.com/get-started)
   - [Python 3.6+](https://www.python.org/downloads/)
