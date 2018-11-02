@@ -11,6 +11,7 @@ The [COMMON_SETUP.md](../COMMON_SETUP.md) file contains more detailed references
 The python example also requires
 - [Azure CLI](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli?view=azure-cli-latest) (>= 2.0.46)
 - [Azure IoT CLI extension](https://github.com/Azure/azure-iot-cli-extension#step-1-install-the-extension)
+- [jq](https://stedolan.github.io/jq/) `sudo apt-get install jq`
 - *Either* of the following
   - [Docker](https://www.docker.com/get-started)
   - [Python 3.6+](https://www.python.org/downloads/)
@@ -48,8 +49,15 @@ At this point, your client device is connected to IoT Hub and is registered to r
 
 In the `automate-setup` directory,
 
+*Ensure environment variables are set*
+
+If you have followed the [COMMON_SETUP](../COMMON_SETUP.md) and have not closed the shell, the necessary environment variables should already be set. Otherwise, you can manage them by using a `.env` file.
+
 - Copy `.env.sample` to `.env` and update the values
 - Source the `.env` file: `source .env`
+
+*Run the script*
+
 - Ensure the script is executable: `chmod +x new-blob.sh`
 - Execute the backend script to upload and apply a new blob: 
     ```
@@ -57,7 +65,7 @@ In the `automate-setup` directory,
         $AZURE_STORAGE_ACCOUNT \
         $AZURE_STORAGE_CONTAINER \
         $SENSOR_ID \
-        ../sample-files/iotLogo.txt
+        ../../sample-files/iotLogo.txt
     ```
 
 If you left the client running, you should see the new artwork displayed in the console.
