@@ -36,7 +36,7 @@ echo "The new blob is here:"
 echo $NEW_URL 
 
 # Create the patch object
-TS=`date '+%Y-%m-%dT%H:%M:%S'`
+TS=`date --iso-8601=seconds`
 TWIN_PATCH='{"uri":"'${NEW_URL}'","ts":"'${TS}'","contentType":"text/plain"}'
 echo $TWIN_PATCH
 
