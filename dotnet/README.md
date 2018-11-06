@@ -27,7 +27,7 @@ The `IoTClientDeviceBlobExtensionNetCore` project can be run as a console applic
   - One option is to execute the following [Azure CLI](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli?view=azure-cli-latest) command `az iot hub device-identity show-connection-string --hub-name YourIoTHubName --device-id MyNodeDevice --output table`
   - Another option is to retrieve the connection string from the Azure Portal as described in the [Create a device identity](https://docs.microsoft.com/en-us/azure/iot-hub/iot-hub-csharp-csharp-device-management-get-started#create-a-device-identity) documentation.
 - Open the `IoTClientDeviceBlobExtensionNetCore` project
-  - Add the device connection string to this line in `Proram.cs`: `static string DeviceConnectionString = "Put Device Connection string here";`
+  - Add the device connection string to this line in `Program.cs`: `static string DeviceConnectionString = "Put Device Connection string here";`
   - Build and run the program
 
 At this point, your client device is connected to IoT Hub and is registered to receive updates for its associated [device twin](https://docs.microsoft.com/en-us/azure/iot-hub/iot-hub-devguide-device-twins).
