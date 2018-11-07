@@ -21,11 +21,9 @@ SEND_CALLBACKS = 0
 MSG_TXT = "{\"deviceId\": \"" + DEVICE_ID + "}"
 
 # Device Twin configuration:
-TWIN_CONTEXT = 0
-SEND_REPORTED_STATE_CONTEXT = 0
 LAST_TS=datetime.datetime.min.replace(tzinfo=datetime.timezone.utc)
 
-def device_twin_callback(update_state, payload, user_context):
+def device_twin_callback(update_state, payload, client_as_user_context):
     global LAST_TS
 
     print ( "" )
@@ -33,6 +31,7 @@ def device_twin_callback(update_state, payload, user_context):
     print ( "    updateStatus: %s" % update_state )
     print ( "    payload: %s" % payload )
     print (update_state)
+    
     if (("%s"%(update_state)) == "PARTIAL"):
         
         print ("Change triggered on device twin")
@@ -55,6 +54,10 @@ def device_twin_callback(update_state, payload, user_context):
             print(text)
 
             LAST_TS = ts
+
+            reported_state = { 'configurationBlob': { 'uri': url, 'ts': ts_string }}
+            reported_state_json = json.dumps(reported_state)
+            client_as_user_context.send_reported_state(reported_state_json, len(reported_state_json), send_reported_state_callback, None)
 
         else:
             print ( "Skipping download due to earlier timestamp ... ")
@@ -98,7 +101,7 @@ def iothub_client_init():
     client.set_option("logtrace", 0)
 
     if client.protocol == IoTHubTransportProvider.MQTT or client.protocol == IoTHubTransportProvider.MQTT_WS:
-        client.set_device_twin_callback(device_twin_callback, TWIN_CONTEXT)
+        client.set_device_twin_callback(device_twin_callback, client)
     return client
 
 def iothub_client_telemetry_sample_run():
