@@ -34,7 +34,7 @@ In the `device-twin-client` directory, you can choose to run the client example 
 
 *To run the python client directly*
 
-- Install the Azure IoT Hub device client module: `pip install azure-iothub-device-client`
+- Install the dependencies: `pip install -r requirements.txt`
 - Export the CONNECTION_STRING and DEVICE_ID environment variables. When on Windows, use `SET` instead of `export`
 ```bash
 export CONNECTION_STRING=HostName=yourhub.azure-devices.net;DeviceId=yourdevice;SharedAccessKey=redacted
