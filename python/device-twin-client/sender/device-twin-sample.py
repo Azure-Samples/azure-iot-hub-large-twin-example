@@ -2,9 +2,11 @@ import random
 import time
 import sys
 import os
+import datetime
 import urllib.request
 import json
 import iothub_client
+import dateutil.parser
 from iothub_client import IoTHubClient, IoTHubClientError, IoTHubTransportProvider, IoTHubClientResult
 from iothub_client import IoTHubMessage, IoTHubMessageDispositionResult, IoTHubError, DeviceMethodReturnValue
 
@@ -19,25 +21,44 @@ SEND_CALLBACKS = 0
 MSG_TXT = "{\"deviceId\": \"" + DEVICE_ID + "}"
 
 # Device Twin configuration:
-TIMER_COUNT = 5
 TWIN_CONTEXT = 0
 SEND_REPORTED_STATE_CONTEXT = 0
+LAST_TS=datetime.datetime.min.replace(tzinfo=datetime.timezone.utc)
+
 def device_twin_callback(update_state, payload, user_context):
+    global LAST_TS
+
     print ( "" )
     print ( "Twin callback called with:" )
     print ( "    updateStatus: %s" % update_state )
     print ( "    payload: %s" % payload )
     print (update_state)
     if (("%s"%(update_state)) == "PARTIAL"):
+        
         print ("Change triggered on device twin")
-        print ( "Downloading new file ...")
+        
         parsed_json = json.loads(payload)
         url = parsed_json["configurationBlob"]["uri"]
+        ts_string = parsed_json["configurationBlob"]["ts"]
+        ts = dateutil.parser.parse(ts_string)
+
         print ( "    url of the blob: %s" % url )
-        response = urllib.request.urlopen(url)
-        data = response.read()
-        text = data.decode('utf-8')
-        print(text)
+        print ( "    timestamp of the blob: %s" % ts )
+
+        if ts > LAST_TS:
+            
+            print ( "Downloading new file ...")
+            response = urllib.request.urlopen(url)
+            data = response.read()
+            
+            text = data.decode('utf-8')
+            print(text)
+
+            LAST_TS = ts
+
+        else:
+            print ( "Skipping download due to earlier timestamp ... ")
+
     if (update_state == "COMPLETE"):
         print ( "Device Twin has no changes")
 
