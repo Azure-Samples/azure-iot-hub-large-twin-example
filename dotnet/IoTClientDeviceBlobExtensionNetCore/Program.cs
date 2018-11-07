@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Microsoft.Azure.Devices.Client;
-using Microsoft.Azure.Devices.Shared;
-using Newtonsoft.Json;
 
 
 namespace IoTClientDeviceBlobExtensionNetCore
@@ -44,21 +42,13 @@ namespace IoTClientDeviceBlobExtensionNetCore
                 Client = DeviceClient.CreateFromConnectionString(DeviceConnectionString,
                   TransportType.Mqtt);
                 Console.WriteLine("Retrieving twin");
-                var twin = await Client.GetTwinAsync();
 
                 //Init Blob extenstion class create it per each blob attachment              
                 blobClient = new BlobExtension(Client, blobConfigPropertyName);
                 
-                //Download first time the blob attachment on a first start
-                string bigBlobContent = await blobClient.DownloadBlobAsync(twin.Properties.Desired[blobConfigPropertyName]);
-                ProcessContent(bigBlobContent);
-
                 //Subscribe on event if blob will be changed
-                blobClient.BlobPropertyUpdatedEvent += BlobClient_BlobPropertyUpdatedEvent;               
-
-                Console.WriteLine("Twin: {0}", twin.ToJson());
-                Console.WriteLine("Big Blob content length: {0}", bigBlobContent.Length.ToString());
-
+                blobClient.BlobPropertyUpdatedEvent += BlobClient_BlobPropertyUpdatedEvent;
+                await blobClient.GetInitialTwin();
             }
             catch (Exception ex)
             {

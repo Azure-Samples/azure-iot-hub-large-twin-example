@@ -18,6 +18,11 @@ namespace IoTClientDeviceBlobExtensionNetCore
     class BlobExtension
     {
         private DeviceClient client = null;
+
+        private string lastContent = null;
+        private DateTime lastTimestamp = DateTime.MinValue;
+        private string lastUri = string.Empty;
+
         private string blobConfigPropertyName;
 
         #region Event initialization to handle blob changes
@@ -60,14 +65,31 @@ namespace IoTClientDeviceBlobExtensionNetCore
             blobConfigPropertyName = BlobConfigPropertyName;
             client = Client;
         }
+
+        async public Task GetInitialTwin()
+        {
+            if (!string.IsNullOrWhiteSpace(lastContent))
+            {
+                OnBlobPropertyUpdatedEvent(new BlobPropertyUpdatedArgs
+                {
+                    BlobContent = lastContent,
+                    DateTimeUpdated = lastTimestamp
+                }, this);
+
+                return;
+            }
+
+            var twin = await client.GetTwinAsync();
+            Console.WriteLine("Twin: {0}", twin.ToJson());
+            await OnDesiredPropertiesUpdate(twin.Properties.Desired, this);
+        }
+
         /// <summary>
         /// Downloading extended blob based on link information from twin json file
         /// </summary>
-        /// <param name="ConfigBlobSectionContent">JSON Section content from IOT Hub twin that
-        /// contains information about blob extended properties</param>     
-        async public Task<string> DownloadBlobAsync(dynamic ConfigBlobSectionContent) {
+        /// <param name="sasUri">The SAS URI to the blob</param>     
+        async private Task<string> DownloadBlobAsync(string sasUri) {
             string content = String.Empty;
-            string sasUri = (string)ConfigBlobSectionContent["uri"];
             CloudBlockBlob blob = new CloudBlockBlob(new Uri(sasUri));          
             
             try
@@ -110,17 +132,34 @@ namespace IoTClientDeviceBlobExtensionNetCore
                 //Checking that changed properties is related to blob extended properties
                 if (desiredProperties[blobConfigPropertyName] != null)
                 {
-                    var content = await DownloadBlobAsync(desiredProperties[blobConfigPropertyName]);
+                    var ts = desiredProperties[blobConfigPropertyName]["ts"].Value;
+                    string sasUri = desiredProperties[blobConfigPropertyName]["uri"].Value;
+
+                    if (string.IsNullOrWhiteSpace(sasUri))
+                    {
+                        Console.WriteLine("Unable to apply blob update: uri is null or whitespace.");
+                        return;
+                    }
+                    
+                    if (ts <= lastTimestamp && string.Compare(sasUri, lastUri, true) == 0)
+                    {
+                        Console.WriteLine("Skipping blob update: for the same sas uri, the ts is less than or equal to the currently applied configuration.");
+                        return;
+                    }
+
+                    lastContent = await DownloadBlobAsync(sasUri);
+                    lastTimestamp = ts;
+                    lastUri = sasUri;
 
                     BlobPropertyUpdatedArgs args = new BlobPropertyUpdatedArgs();
-                    args.BlobContent = content;
-                    args.DateTimeUpdated = desiredProperties[blobConfigPropertyName]["ts"]; //add checking dates
+                    args.BlobContent = lastContent;
+                    args.DateTimeUpdated = ts;
 
-                    //Rais event
+                    //Raise event
                     OnBlobPropertyUpdatedEvent(args, this);
 
                     //Notify IoT hub twin json file that we successfully download the extended blob file
-                    await NotifyIoTHubOfUpdatedBlob(true);
+                    await NotifyIoTHubOfUpdatedBlob(sasUri, ts.ToString("o"));
                 }
             }
             catch (AggregateException ex)
@@ -133,8 +172,6 @@ namespace IoTClientDeviceBlobExtensionNetCore
             }
             catch (Exception ex)
             {
-                await NotifyIoTHubOfUpdatedBlob(false);
-
                 Console.WriteLine();
                 Console.WriteLine("Error when receiving desired property: {0}", ex.Message);
             }          
@@ -142,19 +179,14 @@ namespace IoTClientDeviceBlobExtensionNetCore
         /// <summary>
         /// Internal method that notify IoT hub that we update twin
         /// </summary>
-        /// <param name="Success">Bool variable that will notify as successful or failed extended sync process</param>  
-        private async Task NotifyIoTHubOfUpdatedBlob(bool Success) {
+        /// <param name="sasUri">The uri to the applied blob</param>  
+        /// <param name="ts">The ts of the applied blob</param>  
+        private async Task NotifyIoTHubOfUpdatedBlob(string sasUri, string ts) {
 
             try
             {
-                if (Success)
-                {
-                    await client.UpdateReportedPropertiesAsync(new TwinCollection("{'configurationBlob': {'status': 'recieved'}}"));
-                }
-                else
-                {
-                    await client.UpdateReportedPropertiesAsync(new TwinCollection("{'configurationBlob': {'status': 'failed'}}"));
-                }
+                var json = string.Format("{{'configurationBlob': {{'uri': '{0}', 'ts': '{1}'}}}}", sasUri, ts);
+                await client.UpdateReportedPropertiesAsync(new TwinCollection(json));
             }
             catch (Exception ex) {
                 Console.WriteLine();
@@ -162,7 +194,7 @@ namespace IoTClientDeviceBlobExtensionNetCore
             }
 
             Console.WriteLine();
-            Console.WriteLine("Reported properties updated successfully with value:", Success);
+            Console.WriteLine("Reported properties updated successfully with value:", sasUri, ts);
         }
 
         public class BlobPropertyUpdatedArgs : EventArgs
