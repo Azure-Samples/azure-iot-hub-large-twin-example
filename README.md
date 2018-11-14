@@ -1,7 +1,7 @@
 ---
 services: iot-hub 
 platforms: nodejs,python,dotnet
-author: druttka
+author: druttka,Gaploid,brusMX,koheikawata
 ---
 
 # How To Extend Azure IoT Hub Twins via Azure Blob Storage  
