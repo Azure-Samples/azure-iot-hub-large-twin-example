@@ -13,7 +13,6 @@ namespace IoTClientDeviceBlobExtensionNetCore
 {
     /// <summary>
     /// This class add ability to extended IoT twin json file with link to external azure blob file.
-    /// Currently IoT hub twin json have limitation for >4kb
     /// </summary>
     class BlobExtension
     {
