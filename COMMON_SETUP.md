@@ -4,7 +4,7 @@ Before getting started with any of the platform specific examples, there is some
 
 There are many alternatives to the Bash + Azure CLI approach. To take an alternative approach, refer instead to the following:
 
-- To create an Azure IoT Hub and at least one connected device (physical or simulated), refer to any of the "Send telemetry" 5-Minute Quickstarts under the [IoT Hub Documentation] (https://docs.microsoft.com/en-us/azure/iot-hub/).
+- To create an Azure IoT Hub and at least one connected device (physical or simulated), refer to any of the "Send telemetry" 5-Minute Quickstarts under the [IoT Hub Documentation](https://docs.microsoft.com/en-us/azure/iot-hub/).
 - To create an Azure Storage account, refer to any of the "Create storage account" 5-Minute Quickstarts under the [Azure Storage Documentation](https://docs.microsoft.com/en-us/azure/storage/).
 - To create a blob container within the Azure Storage account, refer to the "Blob quickstarts" of the [Azure Storage Documentation](https://docs.microsoft.com/en-us/azure/storage/). 
 
