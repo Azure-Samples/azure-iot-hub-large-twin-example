@@ -32,7 +32,7 @@ The `IoTClientDeviceBlobExtensionNetCore` project can be run as a console applic
 
 At this point, your client device is connected to IoT Hub and is registered to receive updates for its associated [device twin](https://docs.microsoft.com/en-us/azure/iot-hub/iot-hub-devguide-device-twins).
 
-**Deploy and configure the back-end solution**
+**Deploy the back-end solution as an Azure Functions**
 
 The `IoTHubExtension` project is meant to be hosted as an Azure Function. One of the easiest ways to deploy this would be:
 
@@ -42,7 +42,27 @@ The `IoTHubExtension` project is meant to be hosted as an Azure Function. One of
 
 ![Azure Functions extension toolbar](../images/AzureFunctionsExtensionToolbar.png)
 
-> TODO: Add the more complete details about configuring the blob trigger, IoT Hub connection string, and device query condition 
+> NOTE: Be sure that you perform a `dotnet build` and `dotnet publish` before deploying the Azure Function. Also, when the VS Code Extension for Azure Functions prompts for a folder to zip and deploy, choose the publish folder (e.g.,`./bin/Debug/netcoreapp2.1/publish`) rather than the root project directory. The output should show something similar to `Syncing 1 function triggers with payload size 153 bytes successful.` The important part here is that it has synced 1 function trigger.
+
+**Configure the Azure Function**
+
+The Azure Function relies on one connection string, two environment variables, and the path into which blobs will be uploaded.
+
+The environment variables and connection strings can be managed from the [Application Settings for the function app](https://docs.microsoft.com/en-us/azure/azure-functions/functions-how-to-use-azure-function-app-settings). 
+
+- Under Connection Strings, add `BlobStorageConnectionString`, and set the value to a connection string for your storage account. You can find your storage account's connection strings in the Azure portal. Navigate to SETTINGS > Access keys in your storage account's menu blade to see connection strings for both primary and secondary access keys.
+- Under Application Settings, add `iotHubConnectionString` and set it to an iothubowner connection string.
+- Also under Application Settings, add `iotHubDeviceQuery` and set it to a value like `SELECT * FROM devices WHERE deviceId='twinblob'`. For more information on forming device queries, see the [Query language documentation](https://docs.microsoft.com/en-us/azure/iot-hub/iot-hub-devguide-query-language).
+
+![Function App Settings](../images/FunctionAppSettings.png)
+
+The path into which blobs will be uploaded is managed directly in the code. By default, the `BlobTrigger` expects the blobs to be placed within a container named `extensions`. If you wish to use a different container name, edit the following line from `BlobTriggerTwinUpdater.cs`, changing `extensions` to whatever you want the container name to be.
+
+`public static void Run([BlobTrigger("extensions/{Uri}", Connection = "BlobStorageConnectionString")]CloudBlockBlob myBlob, string Uri, ILogger log)`
+
+**Apply a new blob**
+
+Create or update a blob under the storage account and path configured above. You might use [Storage Explorer](https://azure.microsoft.com/en-us/features/storage-explorer/), the [Azure Portal](https://docs.microsoft.com/en-us/azure/storage/blobs/storage-quickstart-blobs-portal), or the [Azure CLI](https://docs.microsoft.com/en-us/azure/storage/blobs/storage-quickstart-blobs-cli).
 
 If you left the client running, you should see the new artwork displayed in the console.
 

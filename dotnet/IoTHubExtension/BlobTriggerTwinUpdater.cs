@@ -15,19 +15,36 @@ namespace IoTHubExtension
     public static class BlobTriggerTwinUpdater
     {
         static RegistryManager registryManager;
-        static string IotHubconnectionString = "PUT IOT HUB CONNECTION STRING HERE";
-        static string iothubquery = "SELECT * FROM devices WHERE tags.platform = 'netcore'";        
+        static string iotHubQuery;
 
         [FunctionName("BlobTriggerTwinUpdater")]
-        public static void Run([BlobTrigger("extensions/{Uri}", Connection = "IotHubextensionConnectionString")]CloudBlockBlob myBlob, string Uri, ILogger log)
+        public static void Run([BlobTrigger("extensions/{Uri}", Connection = "BlobStorageConnectionString")]CloudBlockBlob myBlob, string Uri, ILogger log)
         {
+            EnsureInitialized();
+
             log.LogInformation($"C# Blob trigger function Processed blob\n Uri:{Uri} BlobUri{myBlob.StorageUri.PrimaryUri.ToString()}");
             string bloburl = GenerateSaSURI(myBlob);
 
-            registryManager = RegistryManager.CreateFromConnectionString(IotHubconnectionString);
-            UpdateTwins(iothubquery, bloburl).Wait();
+            UpdateTwins(bloburl).Wait();
         }
 
+        /// <summary>
+        /// Ensures that static resources, e.g. the registry manager, have been initialized
+        /// </summary>
+        /// <returns></returns>
+        private static void EnsureInitialized()
+        {
+            if (registryManager == null)
+            {
+                string iotHubConnectionString = Environment.GetEnvironmentVariable("iotHubConnectionString");
+                registryManager = RegistryManager.CreateFromConnectionString(iotHubConnectionString);
+            }
+
+            if (string.IsNullOrWhiteSpace(iotHubQuery))
+            {
+                iotHubQuery = Environment.GetEnvironmentVariable("iotHubDeviceQuery");
+            }
+        }
 
         /// <summary>
         /// Generating Blob URI with SAS token
@@ -55,11 +72,10 @@ namespace IoTHubExtension
         /// Updating Twins of all devices that selected by input query
         /// </summary>
         /// <param name="IotHubQuery">Iot Hub devices query</param>
-        /// <param name="BlobURL">Url to Blob that needs to be provisioned to devices</param>
         /// <returns></returns>
-        public static async Task UpdateTwins(string IotHubQuery, string BlobURL)
+        public static async Task UpdateTwins(string blobUrl)
         {
-            var query = registryManager.CreateQuery(IotHubQuery, 100);
+            var query = registryManager.CreateQuery(iotHubQuery, 100);
             List<Microsoft.Azure.Devices.Shared.Twin> twins = new List<Microsoft.Azure.Devices.Shared.Twin>();
             List<Microsoft.Azure.Devices.Shared.Twin> batchtwins = new List<Microsoft.Azure.Devices.Shared.Twin>();
 
@@ -68,7 +84,7 @@ namespace IoTHubExtension
                 'uri': '{0}',
                 'ts': '{1}',
                 'contentType': 'json'
-            }}}}", BlobURL, changeDateTime);
+            }}}}", blobUrl, changeDateTime);
             
             TwinCollection collection = new TwinCollection();
             
