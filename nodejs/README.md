@@ -16,6 +16,7 @@ In the `client` directory,
 
 - Retrieve the device connection string for your IoT Hub device; e.g., execute the following [Azure CLI](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli?view=azure-cli-latest) command `az iot hub device-identity show-connection-string --hub-name YourIoTHubName --device-id MyNodeDevice --output table`
 - Execute the sample client with this device connection string as an envrionment variable to the process; e.g., `DEVICE_CONNECTION_STRING="yourConnectionString" node client.js`
+  - On Windows, you can `SET DEVICE_CONNECTION_STRING=yourConnectionString` and then execute `node client.js`
 
 At this point, your client device is connected to IoT Hub and is registered to receive updates for its associated [device twin](https://docs.microsoft.com/en-us/azure/iot-hub/iot-hub-devguide-device-twins).
 
