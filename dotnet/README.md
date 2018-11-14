@@ -78,7 +78,7 @@ The `BlobExtension` acts on the updated properties.
 
 ### Back-end
 
-![Sample diagram](IotHubExtendingTwin.png)
+![Sample diagram](../images/IotHubExtendingTwin.png)
 
 This example uses an Azure Function triggered from blob updates. The function iterates over the results of a device query to patch each twin. 
 
