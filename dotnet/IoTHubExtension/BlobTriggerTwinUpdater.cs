@@ -79,7 +79,7 @@ namespace IoTHubExtension
             List<Microsoft.Azure.Devices.Shared.Twin> twins = new List<Microsoft.Azure.Devices.Shared.Twin>();
             List<Microsoft.Azure.Devices.Shared.Twin> batchtwins = new List<Microsoft.Azure.Devices.Shared.Twin>();
 
-            string changeDateTime = System.DateTime.UtcNow.ToString("R");
+            string changeDateTime = System.DateTime.UtcNow.ToString("o");
             string patch = String.Format(@"{{'configurationBlob': {{
                 'uri': '{0}',
                 'ts': '{1}',
