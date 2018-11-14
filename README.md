@@ -8,7 +8,7 @@ author: druttka
 
 This sample demonstrates how to extend Azure IoT Hub Twins via Azure Blob Storage. Concretely, a solution can benefit from this approach if the twin properties either [exceed the current limit](https://feedback.azure.com/forums/907045-azure-iot-edge/suggestions/33583492-iot-hub-device-and-module-twins-limit) or refer to binary content that cannot be easily represented in the twin's JSON payload.
 
-> NOTE: While the approach described in this repo has been used in several production scenarios, the sample code in this repo is for demonstration purposes and is not production ready. For example, the sample code does not currently include retry logic, robust error handling, tests, etc.
+> NOTE: While the approach described in this repo has been used in several production scenarios, the sample code in this repo is tailored for demonstration purposes and is not production ready. For example, the sample code does not currently include retry logic, robust error handling, tests, etc.
 
 ## Getting Started
 
