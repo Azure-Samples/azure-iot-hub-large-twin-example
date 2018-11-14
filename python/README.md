@@ -52,7 +52,8 @@ In the `automate-setup` directory,
 
 If you have followed the [COMMON_SETUP](../COMMON_SETUP.md) and have not closed the shell, the necessary environment variables should already be set. Otherwise, you can manage them by using a `.env` file.
 
-- Copy `.env.sample` to `.env` and update the values
+- Copy `.env.sample` to `.env`
+- Update the values
 - Source the `.env` file: `source .env`
 
 *Run the script*
