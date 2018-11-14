@@ -1,9 +1,3 @@
----
-services: azure-iot-hub-large-twin-example
-platforms: dotnet-core
-author: Kohei Kawata
----
-
 # How To Extend Azure IoT Hub Twins via Azure Blob Storage (.NET)
 
 Please refer to the [root README](../README.md) for a high level introduction of this sample. This document covers the details of the specific `dotnet` implementation.  
