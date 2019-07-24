@@ -1,7 +1,13 @@
 ---
-services: iot-hub 
-platforms: nodejs,python,dotnet
-author: druttka,Gaploid,brusMX,koheikawata
+page_type: sample
+languages:
+  - csharp
+  - nodejs
+  - python
+products:
+  - azure-iot-hub
+  - azure-iot-edge
+  - azure-storage
 ---
 
 # How To Extend Azure IoT Hub Twins via Azure Blob Storage  
