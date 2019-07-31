@@ -5,9 +5,11 @@ languages:
   - nodejs
   - python
 products:
+  - azure
   - azure-iot-hub
   - azure-iot-edge
   - azure-storage
+urlFragment: extend-iot-twins
 ---
 
 # How To Extend Azure IoT Hub Twins via Azure Blob Storage  
