@@ -20,8 +20,8 @@
   "author": "david.ruttka@microsoft.com",
   "license": "MIT",
   "dependencies": {
-    "azure-iothub": "^1.7.4",
-    "azure-storage": "^2.10.1",
+    "azure-iothub": "^1.11.0",
+    "azure-storage": "^2.10.3",
     "dotenv": "^6.1.0"
   }
 }
