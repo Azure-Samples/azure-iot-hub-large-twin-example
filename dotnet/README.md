@@ -9,7 +9,7 @@ Please refer to the [root README](../README.md) for a high level introduction of
 The [COMMON_SETUP.md](../COMMON_SETUP.md) file contains more detailed references on how to provision the required resources (e.g., IoT Hub, device identity, Storage Account, blob container).
 
 This platform solution also requires
-- [.NET Core 2.1 SDK](https://www.microsoft.com/net/download)
+- [.NET Core 3.1 SDK](https://www.microsoft.com/net/download)
 
 ### Quickstart
 
@@ -44,9 +44,9 @@ The Azure Function relies on one connection string, two environment variables, a
 
 The environment variables and connection strings can be managed from the [Application Settings for the function app](https://docs.microsoft.com/en-us/azure/azure-functions/functions-how-to-use-azure-function-app-settings). 
 
-- Under Connection Strings, add `BlobStorageConnectionString`, and set the value to a connection string for your storage account. You can find your storage account's connection strings in the Azure portal. Navigate to SETTINGS > Access keys in your storage account's menu blade to see connection strings for both primary and secondary access keys.
+- Under Connection Strings, add `BlobStorageConnectionString`, and set the value to a connection string for your storage account. You can find your storage account's connection strings in the Azure portal. Navigate to your storage account. Select `Security + networking` > `Access keys` in your storage account's menu blade to see connection strings for both primary and secondary access keys.
 - Under Application Settings, add `iotHubConnectionString` and set it to an iothubowner connection string.
-- Also under Application Settings, add `iotHubDeviceQuery` and set it to a value like `SELECT * FROM devices WHERE deviceId='twinblob'`. For more information on forming device queries, see the [Query language documentation](https://docs.microsoft.com/en-us/azure/iot-hub/iot-hub-devguide-query-language).
+- Also under Application Settings, add `iotHubDeviceQuery` and set it to a value like `SELECT * FROM devices WHERE deviceId='twinblob'` where `twinblob` will be the id of your device. For more information on forming device queries, see the [Query language documentation](https://docs.microsoft.com/en-us/azure/iot-hub/iot-hub-devguide-query-language).
 
 ![Function App Settings](../images/FunctionAppSettings.png)
 

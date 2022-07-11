@@ -38,19 +38,19 @@ az login
 
 Also ensure that you have selected the desired target subscription
 
-To list available subscriptions,
+To list available subscriptions:
 
 ```bash
 az account list -o table
 ```
 
-To set the active subscription,
+To set the active subscription:
 
 ```bash
 az account set -s {desired_subscription_id}
 ```
 
-To confirm that the subscription has been set
+To confirm that the subscription has been set:
 
 ```bash
 az account show -o table
@@ -58,7 +58,7 @@ az account show -o table
 
 ### Create the resource group
 
-If the target resource group was not previously created, create it now
+If the target resource group was not previously created, create it now:
 
 ```bash
 az group create -n $RESOURCE_GROUP -l $LOCATION
@@ -75,7 +75,7 @@ az iot hub create -g $RESOURCE_GROUP -n $IOT_HUB_NAME --sku S1 -l $LOCATION
 Obtain the credentials to the IoT hub:
 
 ```bash
-export IOT_CON_STRING=`az iot hub show-connection-string -n $IOT_HUB_NAME -g $RESOURCE_GROUP -o tsv`
+export IOT_CON_STRING=`az iot hub connection-string show -n $IOT_HUB_NAME -g $RESOURCE_GROUP -o tsv`
 ```
 
 ### Create a new device in IoT Hub
@@ -101,7 +101,7 @@ az iot hub device-identity create -d $SENSOR_ID --hub-name $IOT_HUB_NAME -g $RES
 This connection string will be used later to associate the actual simulated device to the hub. Let's save this connection for later:
 
 ```bash
-export SENSOR_CS=$(az iot hub device-identity show-connection-string -d $SENSOR_ID --hub-name $IOT_HUB_NAME -g $RESOURCE_GROUP -o tsv)
+export SENSOR_CS=$(az iot hub device-identity connection-string show -d $SENSOR_ID --hub-name $IOT_HUB_NAME -g $RESOURCE_GROUP -o tsv)
 ```
 
 ### Upload the payload to blob storage
@@ -114,7 +114,7 @@ az storage account create \
     --resource-group $RESOURCE_GROUP \
     --location $LOCATION \
     --sku Standard_LRS \
-    --encryption blob
+    --encryption-services blob
 ```
 
 Obtain the credentials and store them in a variable:

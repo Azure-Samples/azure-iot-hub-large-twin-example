@@ -42,7 +42,7 @@ Conceptually, one can workaround the twin size limitation by placing the larger 
 
 ### Twin Contract 
 
-The structure of the twin's JSON payload represents a contract between the device client and the backend solution. In this example, we are defining the following properties in the twin.
+The structure of the twin's JSON payload represents a contract between the device client and the backend solution. In this example, we are defining the following properties in the twin. You will add the `desired` and `reported` properties for the device via the Azure Portal or [Azure CLI](https://docs.microsoft.com/en-us/cli/azure/iot/hub/device-twin?view=azure-cli-latest).
 
 **desired**
 
@@ -61,7 +61,7 @@ We will provide a reference to the blob asset through an object. The property na
 ```
 
 Through this structure, a device or module can observe
-- the location of the linked asset
+- the location of the linked asset (e.g. the url to the blob container to which we uploaded `payload.txt`). 
 - the timestamp at which the asset was last modified
 - the content type of the asset; while this sample does not currently use this value, one can imagine that the device client may know how to negotiate different content types, e.g., a connected display could present an image or play a video
 
@@ -73,7 +73,7 @@ We will report an acknowledgment of the new blob asset in a rich object. The pro
 "properties": {
     "reported": {
         "configurationBlob": {
-            "uri": "https://myaccount.blob.core.windows.net/container/blob.txt?sasquerystring,
+            "uri": "https://myaccount.blob.core.windows.net/container/blob.txt?sasquerystring",
             "ts": "2018-10-09T19:40:18.7138092Z"
         }
     }
@@ -81,7 +81,7 @@ We will report an acknowledgment of the new blob asset in a rich object. The pro
 ```
 
 Through this structure, a device or module can report
-- the location of the currently applied asset
+- the location of the currently applied asset (e.g. the url to the blob container to which we uploaded `payload.txt`). 
 - the timestamp of the applied asset, as echoed from the received `desired` properties
 
 ### Device Client
@@ -92,7 +92,7 @@ When the values in the twin are changed, the device client will respond to the n
 
 Consider a use case where a common large asset is meant to be applied to a class of devices. Updating all of the twins could be a tedious and error-prone process. The example workaround includes patterns for updating individual devices as well as for updating twins at scale. 
 
-After creating or updating the blob, an automated process can submit a job through Azure IoT Hub or directly execute a device query to programatically update the twins for the targetted devices. See platform specific examples in the [dotnet](./dotnet/), [python](./python/), and [nodejs](./nodejs/) folders for more detail.
+After creating or updating the blob, an automated process can submit a job through Azure IoT Hub or directly execute a device query to programatically update the twins for the targeted devices. See platform specific examples in the [dotnet](./dotnet/), [python](./python/), and [nodejs](./nodejs/) folders for more detail.
 
 Note that the different platforms in this example repo accomplish the twin updates in different ways. This is only to demonstrate the alternative patterns. Conceptually, any of the approaches could be utilized on any supported platform.
 
