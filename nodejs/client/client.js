@@ -4,6 +4,9 @@
 // https://docs.microsoft.com/en-us/azure/iot-hub/iot-hub-node-node-twin-getstarted
 // It demonstrates the process of extending the twin updates to fetch and apply 
 // external assets from blob storage, while the twin supplies the link to the blob
+if (process.env.NODE_ENV !== 'production') {
+    require('dotenv').config();
+}
 
 const Client = require('azure-iot-device').Client;
 const Protocol = require('azure-iot-device-mqtt').Mqtt;

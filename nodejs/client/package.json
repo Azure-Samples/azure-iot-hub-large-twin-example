@@ -20,9 +20,10 @@
   "author": "david.ruttka@microsoft.com",
   "license": "MIT",
   "dependencies": {
-    "azure-iot-device": "^1.12.0",
-    "azure-iot-device-mqtt": "^1.11.0",
-    "request": "^2.88.0",
-    "request-promise-native": "^1.0.5"
+    "azure-iot-device": "^1.18.0",
+    "azure-iot-device-mqtt": "^1.16.0",
+    "dotenv": "^16.0.1",
+    "request": "^2.88.2",
+    "request-promise-native": "^1.0.9"
   }
 }

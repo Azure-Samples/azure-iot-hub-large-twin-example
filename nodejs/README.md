@@ -14,9 +14,10 @@ The [COMMON_SETUP.md](../COMMON_SETUP.md) file contains more detailed references
 
 In the `client` directory,
 
-- Retrieve the device connection string for your IoT Hub device; e.g., execute the following [Azure CLI](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli?view=azure-cli-latest) command `az iot hub device-identity show-connection-string --hub-name YourIoTHubName --device-id MyNodeDevice --output table`
+- Retrieve the device connection string for your IoT Hub device; e.g., execute the following [Azure CLI](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli?view=azure-cli-latest) command `az iot hub device-identity connection-string show --hub-name YourIoTHubName --device-id MyNodeDevice --output table`
 - Execute the sample client with this device connection string as an envrionment variable to the process; e.g., `DEVICE_CONNECTION_STRING="yourConnectionString" node client.js`
-  - On Windows, you can `SET DEVICE_CONNECTION_STRING=yourConnectionString` and then execute `node client.js`
+  - On Windows, you can `SET DEVICE_CONNECTION_STRING="yourConnectionString"` and then execute `node client.js`
+  - Alternatively, copy `.env.template` to `.env` and set `DEVICE_CONNECTION_STRING` with your connection string.
 
 At this point, your client device is connected to IoT Hub and is registered to receive updates for its associated [device twin](https://docs.microsoft.com/en-us/azure/iot-hub/iot-hub-devguide-device-twins).
 
@@ -27,6 +28,8 @@ In the `backend` directory,
 - Copy `.env.template` to `.env` and update the values
   - Note that the DEVICE_QUERY_CONDITION in the template is intentionally set to a query which returns no devices
   - Note that the IOT_HUB_CONNECTION_STRING is **not the device connection string**, but rather an iothubowner connection; see [Access Control and Permissions](https://docs.microsoft.com/en-us/azure/iot-hub/iot-hub-devguide-security#iot-hub-permissions) and [Understand Different Connection Strings in Azure IoT Hub](https://blogs.msdn.microsoft.com/iotdev/2017/05/09/understand-different-connection-strings-in-azure-iot-hub/).
+  - STORAGE_ACCOUNT_NAME and STORAGE_ACCOUNT_KEY can be found under the Access keys section of your storage account in the Azure portal.
+  -  Set STORAGE_CONTAINER_NAME to your storage container name.  
 - Execute the backend script to upload and apply a new blob; e.g., `node server.js mynewblob ../../sample-files/payload.txt`
 
 If you left the client running, you should see the new artwork displayed in the console.
