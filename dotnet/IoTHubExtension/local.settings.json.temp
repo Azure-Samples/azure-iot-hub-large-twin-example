@@ -1,0 +1,10 @@
+{
+  "IsEncrypted": false,
+  "Values": {
+    "FUNCTIONS_WORKER_RUNTIME": "dotnet",
+    "AzureWebJobsStorage": "<your Azure Functions blob connection string (use 'UseDevelopmentStorage=true' for the local Storage Emulator)>",
+    "iotHubDeviceQuery": "<your device query string (set it to a value like `SELECT * FROM devices WHERE deviceId='twinblob'`)>",
+    "iotHubConnectionString" : "<your IoT Hub Event Hub-comptabile endpoint (Built-in endpoints -> Event Hub-comptabile endpoint from the IoT Hub menu in Azure Portal)>",
+    "BlobStorageConnectionString": "<your blob storage connection string (use 'UseDevelopmentStorage=true' for the local Storage Emulator)>"
+  }
+}
