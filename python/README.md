@@ -24,12 +24,12 @@ In the `device-twin-client` directory, you can choose to run the client example 
 *In either case*
 
 - Retrieve the device connection string for your IoT Hub device
-  - One option is to execute the following [Azure CLI](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli?view=azure-cli-latest) command `az iot hub device-identity show-connection-string --hub-name YourIoTHubName --device-id MyNodeDevice --output table`
+  - One option is to execute the following [Azure CLI](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli?view=azure-cli-latest) command `az iot hub device-identity connection-string show --hub-name YourIoTHubName --device-id MyNodeDevice --output table`
   - Another option is to retrieve the connection string from the Azure Portal as described in the [Create a device identity](https://docs.microsoft.com/en-us/azure/iot-hub/iot-hub-csharp-csharp-device-management-get-started#create-a-device-identity) documentation.
 
 *For the Docker experience*
 
-- Build the image and tag it: `docker build -t localhost:5000/device-twin-client .`
+- Ensure docker is running. Build the image and tag it: `docker build -t localhost:5000/device-twin-client .`
 - Run the container, being sure to replace the values for the CONNECTION_STRING and DEVICE_ID environment variables: `docker run -e "CONNECTION_STRING={deviceConnectionString}" -e "DEVICE_ID={deviceId}" localhost:5000/device-twin-client`
 
 *To run the python client directly*
