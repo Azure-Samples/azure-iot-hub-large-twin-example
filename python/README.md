@@ -9,11 +9,11 @@ Please refer to the [root README](../README.md) for a high level introduction of
 The [COMMON_SETUP.md](../COMMON_SETUP.md) file contains more detailed references on how to provision the required resources (e.g., IoT Hub, device identity, Storage Account, blob container).
 
 The python example also requires
-- [Azure CLI](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli?view=azure-cli-latest) (>= 2.0.46)
+- [Azure CLI](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli?view=azure-cli-latest) (>= 2.23.0)
 - [Azure IoT CLI extension](https://github.com/Azure/azure-iot-cli-extension#step-1-install-the-extension)
 - *Either* of the following
   - [Docker](https://www.docker.com/get-started)
-  - [Python 3.6+](https://www.python.org/downloads/)
+  - [Python 3.8+](https://www.python.org/downloads/)
 
 ### Quickstart
 
@@ -34,11 +34,11 @@ In the `device-twin-client` directory, you can choose to run the client example 
 
 *To run the python client directly*
 
-- Install the dependencies: `pip install -r requirements.txt`
+- Install the dependencies: `pip install -r ./sender/requirements.txt`
 - Export the CONNECTION_STRING and DEVICE_ID environment variables. When on Windows, use `SET` instead of `export`
 ```bash
-export CONNECTION_STRING=HostName=yourhub.azure-devices.net;DeviceId=yourdevice;SharedAccessKey=redacted
-export DEVICE_ID=yourdevice
+export CONNECTION_STRING="HostName=yourhub.azure-devices.net;DeviceId=yourdevice;SharedAccessKey=redacted"
+export DEVICE_ID="yourdevice"
 ```
 - Run the application: `python ./sender/device-twin-sample.py`
 
@@ -75,10 +75,10 @@ If you left the client running, you should see the new artwork displayed in the 
 ### Client 
 
 - Opens the device client connection (`iothub_client_init`)
-- Registers for device twin updates (`client.set_device_twin_callback`)
-- Enters a loop to send arbitrary sample messages to IoT Hub (`client.send_event_async`)
-- When device twin updates are received (`device_twin_callback`)
-  - Parses the JSON twin (`json.loads(payload)`)
+- Register handler for device twin updates (`twin_patch_handler`)
+- Enters a loop to send arbitrary sample messages to IoT Hub (`client.send_message`)
+- When device twin updates are received (`twin_patch_handler`)
+  - Processes the JSON twin (`patch`)
   - Retrieves the blob via the SAS URL (`urllib.request.urlopen(url)`)
   - Prints it to the console (`print(text)`)
 
