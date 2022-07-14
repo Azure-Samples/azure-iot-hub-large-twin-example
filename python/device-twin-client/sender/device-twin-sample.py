@@ -65,10 +65,14 @@ def print_send_request(message):
     SEND_CALLBACKS += 1
     print ( "    Total calls confirmed: %d \n" % SEND_CALLBACKS )
 
+def iothub_client_init():
+    # prepare iothub client
+    client = IoTHubDeviceClient.create_from_connection_string(CONNECTION_STRING)
+    return client
+
 async def iothub_client_telemetry_sample_run():
     try:
-        # prepare iothub client
-        client = IoTHubDeviceClient.create_from_connection_string(CONNECTION_STRING)
+        client = iothub_client_init()
         await client.connect()    
         print ( "IoT Hub device sending periodic messages, press Ctrl-C to exit \n" )
         # set the twin patch handler on the client
@@ -102,7 +106,6 @@ async def iothub_client_telemetry_sample_run():
     except KeyboardInterrupt:
         print ( "IoTHubClient sample stopped" )
 
-#if __name__ == '__main__':
 async def main():
     print ( "Simulating a device using the Azure IoT Hub Device SDK for Python" )
     if environment_vars():
@@ -111,4 +114,5 @@ async def main():
         await iothub_client_telemetry_sample_run()
     print ( "Simulated device says bye!" )
 if __name__ == "__main__":
-    asyncio.run(main())    
+    asyncio.run(main())  
+      
