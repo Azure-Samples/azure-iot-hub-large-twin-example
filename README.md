@@ -42,7 +42,7 @@ Conceptually, one can workaround the twin size limitation by placing the larger 
 
 ### Twin Contract 
 
-The structure of the twin's JSON payload represents a contract between the device client and the backend solution. In this example, we are defining the following properties in the twin. You will add the `desired` and `reported` properties for the device via the Azure Portal or [Azure CLI](https://docs.microsoft.com/en-us/cli/azure/iot/hub/device-twin?view=azure-cli-latest).
+The structure of the twin's JSON payload represents a contract between the device client and the backend solution. In this example, we are defining the following properties in the twin. We will add the `desired` and `reported` properties for the device via the Azure Portal or [Azure CLI](https://docs.microsoft.com/en-us/cli/azure/iot/hub/device-twin?view=azure-cli-latest). The `desired` property is set by a back-end application and read by a device. The `reported` property is set by the device and read by a back-end application.
 
 **desired**
 
