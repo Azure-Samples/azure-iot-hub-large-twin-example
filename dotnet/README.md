@@ -9,7 +9,7 @@ Please refer to the [root README](../README.md) for a high level introduction of
 The [COMMON_SETUP.md](../COMMON_SETUP.md) file contains more detailed references on how to provision the required resources (e.g., IoT Hub, device identity, Storage Account, blob container).
 
 This platform solution also requires
-- [.NET Core 2.1 SDK](https://www.microsoft.com/net/download)
+- [.NET Core 3.1 SDK](https://www.microsoft.com/net/download)
 
 ### Quickstart
 
@@ -18,7 +18,7 @@ This platform solution also requires
 The `IoTClientDeviceBlobExtensionNetCore` project can be run as a console application which simulates a connected device.
 
 - Retrieve the device connection string for your IoT Hub device
-  - One option is to execute the following [Azure CLI](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli?view=azure-cli-latest) command `az iot hub device-identity show-connection-string --hub-name YourIoTHubName --device-id MyNodeDevice --output table`
+  - One option is to execute the following [Azure CLI](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli?view=azure-cli-latest) command `az iot hub device-identity connection-string show --hub-name YourIoTHubName --device-id MyNodeDevice --output table`
   - Another option is to retrieve the connection string from the Azure Portal as described in the [Create a device identity](https://docs.microsoft.com/en-us/azure/iot-hub/iot-hub-csharp-csharp-device-management-get-started#create-a-device-identity) documentation.
 - Open the `IoTClientDeviceBlobExtensionNetCore` project
   - Add the device connection string to this line in `Program.cs`: `static string DeviceConnectionString = "Put Device Connection string here";`
@@ -36,7 +36,7 @@ The `IoTHubExtension` project is meant to be hosted as an Azure Function. One of
 
 ![Azure Functions extension toolbar](../images/AzureFunctionsExtensionToolbar.png)
 
-> NOTE: Be sure that you perform a `dotnet build` and `dotnet publish` before deploying the Azure Function. Also, when the VS Code Extension for Azure Functions prompts for a folder to zip and deploy, choose the publish folder (e.g.,`./bin/Debug/netcoreapp2.1/publish`) rather than the root project directory. The output should show something similar to `Syncing 1 function triggers with payload size 153 bytes successful.` The important part here is that it has synced 1 function trigger.
+> NOTE: Be sure that you perform a `dotnet build` and `dotnet publish` before deploying the Azure Function. Also, when the VS Code Extension for Azure Functions prompts for a folder to zip and deploy, choose the publish folder (e.g.,`./bin/Debug/netcoreapp3.1/publish`) rather than the root project directory. The output should show something similar to `Syncing 1 function triggers with payload size 153 bytes successful.` The important part here is that it has synced 1 function trigger.
 
 **Configure the Azure Function**
 
@@ -44,9 +44,9 @@ The Azure Function relies on one connection string, two environment variables, a
 
 The environment variables and connection strings can be managed from the [Application Settings for the function app](https://docs.microsoft.com/en-us/azure/azure-functions/functions-how-to-use-azure-function-app-settings). 
 
-- Under Connection Strings, add `BlobStorageConnectionString`, and set the value to a connection string for your storage account. You can find your storage account's connection strings in the Azure portal. Navigate to SETTINGS > Access keys in your storage account's menu blade to see connection strings for both primary and secondary access keys.
+- Under Connection Strings, add `BlobStorageConnectionString`, and set the value to a connection string for your storage account. You can find your storage account's connection strings in the Azure portal. Navigate to your storage account. Select `Security + networking` > `Access keys` in your storage account's menu blade to see connection strings for both primary and secondary access keys.
 - Under Application Settings, add `iotHubConnectionString` and set it to an iothubowner connection string.
-- Also under Application Settings, add `iotHubDeviceQuery` and set it to a value like `SELECT * FROM devices WHERE deviceId='twinblob'`. For more information on forming device queries, see the [Query language documentation](https://docs.microsoft.com/en-us/azure/iot-hub/iot-hub-devguide-query-language).
+- Also under Application Settings, add `iotHubDeviceQuery` and set it to a value like `SELECT * FROM devices WHERE deviceId='twinblob'` where `twinblob` will be the id of your device. For more information on forming device queries, see the [Query language documentation](https://docs.microsoft.com/en-us/azure/iot-hub/iot-hub-devguide-query-language).
 
 ![Function App Settings](../images/FunctionAppSettings.png)
 

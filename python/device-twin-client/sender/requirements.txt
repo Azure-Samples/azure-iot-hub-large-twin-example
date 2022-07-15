@@ -1,2 +1,2 @@
-azure-iothub-device-client
+azure-iot-device
 python-dateutil

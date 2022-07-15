@@ -5,8 +5,10 @@
 
 const Iothub = require('azure-iothub');
 const Storage = require('azure-storage');
-
-require('dotenv').load();
+if (process.env.NODE_ENV !== 'production') {
+    require('dotenv').config();
+}
+//require('dotenv').load();
 
 const blobName = process.argv[2];
 const localFilePath = process.argv[3];
